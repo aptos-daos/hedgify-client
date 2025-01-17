@@ -1,0 +1,21 @@
+export const default_token: Token = {
+  chainId: 1,
+  tokenAddress: "0x1::aptos_coin::AptosCoin",
+  faAddress: "0xa",
+  name: "Aptos Coin",
+  symbol: "APT",
+  decimals: 8,
+  bridge: null,
+  panoraSymbol: "APT",
+  usdPrice: "8.69506478",
+  logoUrl:
+    "https://raw.githubusercontent.com/PanoraExchange/Aptos-Tokens/main/logos/APT.svg",
+  websiteUrl: "https://aptosfoundation.org",
+  panoraUI: true,
+  panoraTags: ["Native", "Verified"],
+  panoraIndex: 1,
+  coinGeckoId: "aptos",
+  coinMarketCapId: 21794,
+  isInPanoraTokenList: true,
+  isBanned: false,
+};

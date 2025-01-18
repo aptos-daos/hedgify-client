@@ -1,5 +1,5 @@
 import APIRequest from "../api/APIRequest";
-import { setToken, removeToken } from "@/lib/auth";
+import { setToken, removeToken } from "@/lib/token";
 
 type MessageNonceResponse = {
   message: string;

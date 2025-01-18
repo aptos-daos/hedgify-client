@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import RootLayoutProvider from "@/provider/RootLayoutProvider";
-import { Jost as FontSans } from "next/font/google";
+import { Montserrat as FontSans } from "next/font/google";
 import "./globals.css";
 import { WalletProvider } from "@/provider/WalletProvider";
 import { Toaster } from "@/components/ui/toaster";

@@ -1,22 +1,20 @@
-import Cookies from "js-cookie";
+import NextAuth from "next-auth";
+import Twitter from "next-auth/providers/twitter";
 
-const TOKEN_KEY = "auth_token";
-
-export const getToken = (): string => {
-  const token = Cookies.get(TOKEN_KEY);
-  if (!token) {
-    return "";
-  }
-  return token;
-};
-export const setToken = (token: string): void => {
-  Cookies.set(TOKEN_KEY, token, {
-    expires: 7,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
-  });
-};
-
-export const removeToken = (): void => {
-  Cookies.remove(TOKEN_KEY);
-};
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  providers: [Twitter],
+  callbacks: {
+    signIn: ({ user, account, profile, email, credentials }) => {
+      user.id = profile?.id as string;
+      return true;
+    },
+    jwt: async ({ token, trigger, profile, user, session }) => {
+      return token;
+    },
+    session: ({ session, token }) => {
+      // @ts-ignore
+      session.user.id = token.id
+      return session;
+    }
+  },
+});

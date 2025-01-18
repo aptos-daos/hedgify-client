@@ -1,4 +1,4 @@
-import { getToken } from "@/lib/auth";
+import { getToken } from "@/lib/token";
 import { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import defaultInstance from "./api.instance";
 

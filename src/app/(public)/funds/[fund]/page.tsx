@@ -1,3 +1,4 @@
+import Chats from "@/components/modules/chats";
 import MyDaoToken from "@/components/modules/my-dao-token";
 import PreviewDisplay from "@/components/modules/preview-display";
 import SwapWidget from "@/components/modules/swap-widget";
@@ -18,13 +19,13 @@ export default async function Page({
     return notFound();
   }
 
-  // TODO: Implement Portfolio Number and Percentage
-
   return (
     <main>
-      <PreviewDisplay portfolioPercentage={43} portfolioSize={1200} {...dao} />
-      <SwapWidget />
-      <MyDaoToken />
+      <div className="flex justify-between gap-2">
+        <PreviewDisplay {...dao} />
+        <SwapWidget />
+      </div>
+      <Chats daoId={dao.id} />
     </main>
   );
 }

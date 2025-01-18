@@ -27,6 +27,14 @@ const Home: React.FC = () => {
 
   return (
     <main>
+      <section className="space-y-2 text-center">
+        <h1 className="font-extrabold">Raise Money.</h1>
+        <h1 className="font-extrabold">Trade Memes.</h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa est
+          laudantium vero?
+        </p>
+      </section>
       <DaoCardList
         title="Featured Funds"
         daos={featuredFunds}

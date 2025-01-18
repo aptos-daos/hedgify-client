@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${mFont.className} antialiased bg-white dark:bg-black`}>
+      <body className={`${mFont.className} antialiased`}>
         <WalletProvider>
           <RootLayoutProvider>
             {children}

@@ -1,41 +1,21 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DaoData } from "@/validation/dao.validation";
-import { formatCurrency } from "@/utils/formatters";
-import HoldingTable from "./HoldingTable";
+import { ImageCard } from "@/components/molecules/card/image-card";
+import LiveView from "./LiveView";
+import DaoDetails from "./DaoDetails";
 
-interface Props extends DaoData {
-  portfolioSize: number;
-  portfolioPercentage: number;
-}
+interface Props extends DaoData {}
 
-const PreviewDisplay = ({
-  id,
-  title,
-  description,
-  portfolioSize,
-  portfolioPercentage,
-}: Props) => {
+const PreviewDisplay: React.FC<Props> = (dao) => {
   return (
-    <Card className="w-full max-w-3xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
-        <p>{description}</p>
-        {/* <div className="mt-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-semibold">
-              Portfolio Size: {formatCurrency(portfolioSize)}
-            </span>
-            <span className="text-lg text-gray-600">
-              ({portfolioPercentage}%)
-            </span>
-          </div>
-        </div> */}
-      </CardHeader>
-      <CardContent>
-        <HoldingTable fundId={id} />
-      </CardContent>
-    </Card>
+    <div className="space-y-2">
+      <div className="flex w-full gap-2">
+        <ImageCard {...dao} />
+        <LiveView />
+      </div>
+
+      <DaoDetails {...dao} />
+    </div>
   );
 };
 

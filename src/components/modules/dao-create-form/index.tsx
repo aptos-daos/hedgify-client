@@ -3,11 +3,12 @@ import { useFormik, FormikHelpers } from "formik";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { daoWithInvite } from "@/validation/dao.validation";
 import Form from "next/form";
 import { useDao } from "@/hooks/use-dao";
+import { Textarea } from "@/components/ui/textarea";
+import { z } from "zod";
 
 type FormValues = z.infer<typeof daoWithInvite>;
 
@@ -36,7 +37,7 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode = "" }) => {
       title: "",
       description: "",
       fundTicker: "",
-      twitterHandle: "",
+      twitterHandle: "fuewgf",
       telegramHandle: "",
       telegramGroup: "",
       poc: "",
@@ -58,19 +59,38 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode = "" }) => {
         {label}
         {required && <span className="text-red-500">*</span>}
       </Label>
-      <Input
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values[name]}
-        className={
-          formik.errors[name] && formik.touched[name] ? "border-red-500" : ""
-        }
-        disabled={formik.isSubmitting}
-      />
+      {type === "textarea" ? (
+        <Textarea
+          id={name}
+          name={name}
+          placeholder={placeholder}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values[name]}
+          className={`w-full min-h-[100px] px-3 py-2 rounded-md border ${
+            formik.errors[name] && formik.touched[name]
+              ? "border-red-500"
+              : "border-gray-300"
+          }`}
+          disabled={formik.isSubmitting}
+          autoComplete={"off"}
+        />
+      ) : (
+        <Input
+          id={name}
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values[name]}
+          className={
+            formik.errors[name] && formik.touched[name] ? "border-red-500" : ""
+          }
+          disabled={formik.isSubmitting}
+          autoComplete="off"
+        />
+      )}
       {formik.errors[name] && formik.touched[name] && (
         <p className="text-red-500 text-sm">{String(formik.errors[name])}</p>
       )}
@@ -89,9 +109,9 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode = "" }) => {
         {renderField(
           "description",
           "Fund Description",
-          "Describe your fund's strategy and goals"
+          "Describe your fund's strategy and goals",
+          "textarea"
         )}
-        {renderField("twitterHandle", "Twitter/X Handle", "@username")}
         {renderField("telegramHandle", "Telegram Handle", "@username")}
         {renderField(
           "telegramGroup",

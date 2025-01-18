@@ -1,27 +1,16 @@
 import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { ImageCard } from "./card/image-card";
 import { DaoData } from "@/validation/dao.validation";
-import Image from "next/image";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
-export function DaoCard({ title, description, poster }: DaoData) {
+export function DaoCard(dao: DaoData) {
+  const { id } = dao;
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <Image
-          src={poster}
-          alt={title}
-          className="object-cover rounded-t-lg"
-          height={100}
-          width={100}
-        />
-        <CardTitle className="mt-4">{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-    </Card>
+    <ImageCard {...dao}>
+      <Link href={`/funds/${id}`}>
+        <Button>Check This Fund</Button>
+      </Link>
+    </ImageCard>
   );
 }

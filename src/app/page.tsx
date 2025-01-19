@@ -7,7 +7,7 @@ import { DaoData } from "@/validation/dao.validation";
 import DaoCardList from "@/components/modules/DaoCardList";
 
 const Home: React.FC = () => {
-  const { daos, loading, error } = useDao();
+  const { daos, loading, error } = useDao(true);
   const currentDate = new Date();
 
   if (error) {
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
   });
 
   return (
-    <main>
+    <main className="pt-20">
       <section className="space-y-2 text-center">
         <h1 className="font-extrabold">Raise Money.</h1>
         <h1 className="font-extrabold">Trade Memes.</h1>

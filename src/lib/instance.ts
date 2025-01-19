@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { setupCache } from 'axios-cache-interceptor';
 
 const baseURL = process.env.NEXT_PUBLIC_SERVER_URL;
 const timeout = Number(process.env.NEXT_PUBLIC_REQUEST_TIMEOUT) || 5000;
@@ -12,7 +13,7 @@ const axiosInstance = axios.create({
     Authorization: `Bearer ${Cookies.get("token")}`,
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-  },
+  }
 });
 
 export const nonSecuredInstance = axios.create({
@@ -25,4 +26,4 @@ export const nonSecuredInstance = axios.create({
   },
 });
 
-export default axiosInstance;
+export default setupCache(axiosInstance);

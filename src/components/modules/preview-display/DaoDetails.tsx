@@ -9,9 +9,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-interface Props extends DaoData {}
+// interface Props extends DaoData {}
 
-const DaoDetails: React.FC<Props> = ({
+const DaoDetails: React.FC<DaoData> = ({
   description,
   treasuryAddress,
   daoCoinAddress,

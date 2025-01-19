@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import type { DaoData, DaoDataWithInvite } from "@/validation/dao.validation";
+import type { DaoData } from "@/validation/dao.validation";
 import { useToast } from "./use-toast";
 import DAOAPI from "@/request/dao/dao.api";
 
-const useDao = () => {
+const useDao = (ifetch = false) => {
   const [daos, setDaos] = useState<DaoData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const api = new DAOAPI();
 
   useEffect(() => {
+    if(!ifetch) return;
+    
     setLoading(true);
     fetchAllDaoData()
       .then((resp) => {
@@ -54,10 +56,13 @@ const useDao = () => {
   };
 
   const createDao = async (
-    data: DaoDataWithInvite
+    data: DaoData,
+    inviteCode: string,
   ): Promise<DaoData | null> => {
     try {
-      const response = await api.createDAO(data);
+      // TODO: handle type
+      // @ts-ignore
+      const response = await api.createDAO({inviteCode, ...data});
       return response;
     } catch (error) {
       toast({

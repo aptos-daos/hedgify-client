@@ -4,9 +4,9 @@ import { ImageCard } from "@/components/molecules/card/image-card";
 import LiveView from "./LiveView";
 import DaoDetails from "./DaoDetails";
 
-interface Props extends DaoData {}
+// interface Props extends DaoData {}
 
-const PreviewDisplay: React.FC<Props> = (dao) => {
+const PreviewDisplay: React.FC<DaoData> = (dao) => {
   return (
     <div className="space-y-2">
       <div className="flex w-full gap-2">

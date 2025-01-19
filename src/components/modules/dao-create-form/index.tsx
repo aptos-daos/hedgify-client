@@ -1,145 +1,100 @@
-import React from "react";
-import { useFormik, FormikHelpers } from "formik";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { toFormikValidationSchema } from "zod-formik-adapter";
-import { daoWithInvite } from "@/validation/dao.validation";
-import Form from "next/form";
-import { useDao } from "@/hooks/use-dao";
-import { Textarea } from "@/components/ui/textarea";
-import { z } from "zod";
+"use client";
 
-type FormValues = z.infer<typeof daoWithInvite>;
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import { Card } from "@/components/ui/card";
+import DAOForm from "./Form";
+import FormInput from "./form-input";
+import { toFormikValidationSchema } from "zod-formik-adapter";
+import InviteAPI from "@/request/invite/invite.api";
+import { AnimatePresence, motion, useAnimate } from "framer-motion";
+import { useSession } from "next-auth/react";
+import { type DaoFormData } from "@/validation/dao.validation";
+
+export const inviteSchema = z.object({
+  inviteCode: z.string().min(6, "Invite code must be at least 6 characters"),
+});
 
 interface Props {
-  inviteCode?: string;
+  inviteCode: string;
+  children: React.ReactNode;
 }
 
-const DaoInitForm: React.FC<Props> = ({ inviteCode = "" }) => {
-  const { createDao } = useDao();
-  const handleSubmit = async (
-    values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
-  ) => {
-    try {
-      const resp = await createDao(values);
-      console.log(resp);
-    } catch (error) {
-      console.error("Submission error:", error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
+  const api = new InviteAPI();
+  const { data: session, status } = useSession();
+  const [scope, animate] = useAnimate();
+  const [verified, setVerified] = useState(inviteCode.length > 0);
 
-  const formik = useFormik<FormValues>({
+  const handleCreateDao = () => {
+
+  }
+
+  const formik = useFormik<{ inviteCode: string }>({
     initialValues: {
-      title: "",
-      description: "",
-      fundTicker: "",
-      twitterHandle: "fuewgf",
-      telegramHandle: "",
-      telegramGroup: "",
-      poc: "",
       inviteCode,
     },
-    validationSchema: toFormikValidationSchema(daoWithInvite),
-    onSubmit: handleSubmit,
+    validationSchema: toFormikValidationSchema(inviteSchema),
+    onSubmit: async (values) => {
+      const v = await api.validateInvite(values.inviteCode);
+      setVerified(v);
+      animate(scope.current, { marginTop: 0 });
+    },
   });
 
-  const renderField = (
-    name: keyof FormValues,
-    label: string,
-    placeholder: string = "",
-    type: string = "text",
-    required: boolean = true
-  ) => (
-    <div className="space-y-2">
-      <Label htmlFor={name}>
-        {label}
-        {required && <span className="text-red-500">*</span>}
-      </Label>
-      {type === "textarea" ? (
-        <Textarea
-          id={name}
-          name={name}
-          placeholder={placeholder}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values[name]}
-          className={`w-full min-h-[100px] px-3 py-2 rounded-md border ${
-            formik.errors[name] && formik.touched[name]
-              ? "border-red-500"
-              : "border-gray-300"
-          }`}
-          disabled={formik.isSubmitting}
-          autoComplete={"off"}
-        />
-      ) : (
-        <Input
-          id={name}
-          name={name}
-          type={type}
-          placeholder={placeholder}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values[name]}
-          className={
-            formik.errors[name] && formik.touched[name] ? "border-red-500" : ""
-          }
-          disabled={formik.isSubmitting}
-          autoComplete="off"
-        />
-      )}
-      {formik.errors[name] && formik.touched[name] && (
-        <p className="text-red-500 text-sm">{String(formik.errors[name])}</p>
-      )}
-    </div>
-  );
-
   return (
-    <div className="w-full max-w-md mx-auto p-6 space-y-6">
-      <h2 className="text-2xl font-bold text-center mb-6">
-        Create Your Hedge Fund DAO
-      </h2>
+    <>
+      <div className={"min-w-max space-y-2 md:space-y-4 mt-10"} ref={scope}>
+        <Card className="w-full min-w-96 mx-auto p-6 pace-y-6">
+          <form onSubmit={formik.handleSubmit} className="space-y-4">
+            <FormInput
+              name="inviteCode"
+              label="Invite Code"
+              placeholder="XXX-XXX-XXX-XXX-XXX"
+              formik={formik}
+              disabled={verified}
+              />
+            {!verified && (
+              <Button type="submit" className="w-full font-semibold" disabled={status !== "authenticated"}>
+                {status === "authenticated" ? "Check Eligibility" : "Please Sign in With Twitter"}
+              </Button>
+            )}
+          </form>
+        </Card>
 
-      <Form action="" onSubmit={formik.handleSubmit} className="space-y-4">
-        {renderField("title", "Fund Name", "Enter your fund's name")}
-        {renderField("fundTicker", "Fund Ticker", "e.g., BTC, ETH")}
-        {renderField(
-          "description",
-          "Fund Description",
-          "Describe your fund's strategy and goals",
-          "textarea"
-        )}
-        {renderField("telegramHandle", "Telegram Handle", "@username")}
-        {renderField(
-          "telegramGroup",
-          "Telegram Group",
-          "@groupname (optional)",
-          "text",
-          false
-        )}
-        {renderField(
-          "poc",
-          "Point of Contact at DeFi",
-          "Enter the name of your DeFi contact"
-        )}
-        {renderField(
-          "inviteCode",
-          "Invite Code",
-          "Enter the invite code you received"
-        )}
+        <AnimatePresence>
+          {verified && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <Card className="w-full max-w-md mx-auto p-6">
+                <h2 className="text-lg md:text-2xl font-bold text-center">
+                  Create Your Hedge Fund DAO
+                </h2>
 
-        <Button
-          type="submit"
-          className="w-full bg-green-500 hover:bg-green-600 text-white"
-          disabled={formik.isSubmitting || !formik.isValid}
-        >
-          {formik.isSubmitting ? "Submitting..." : "Submit"}
-        </Button>
-      </Form>
-    </div>
+                <DAOForm onSubmit={handleCreateDao}/>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <AnimatePresence>
+        {verified && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            className="!m-0 min-w-96"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

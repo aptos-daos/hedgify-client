@@ -1,4 +1,4 @@
-import { generateInviteCode } from "@/lib/invite-code";
+import { generateInviteCode } from "@/utils/invite-code";
 import { useRequest } from "@/request/api/request.hook";
 import InviteAPI from "@/request/invite/invite.api";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";

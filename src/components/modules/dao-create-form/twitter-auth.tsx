@@ -1,6 +1,7 @@
 import React from "react";
 import { signIn, signOut, auth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { XIcon } from "@/constants/icon";
 
 const TwitterLoginButton = async () => {
   
@@ -25,7 +26,9 @@ const TwitterLoginButton = async () => {
         await signIn("twitter");
       }}
     >
-      <Button type="submit">Sign in with Twitter</Button>
+      <Button type="submit">
+        <XIcon className="!w-4 !h-4" />
+        Sign in with Twitter</Button>
     </form>
   );
 };

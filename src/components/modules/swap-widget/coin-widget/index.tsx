@@ -31,8 +31,6 @@ const CoinWidget = ({ onSwap, loading = false }: SwapProps) => {
     },
   });
 
-  console.log(state)
-
   const handleSwapButtonClick = () => {
     setState({
       from: state.to,

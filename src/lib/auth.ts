@@ -12,7 +12,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return token;
     },
     session: ({ session, token }) => {
-      // @ts-ignore
+      // @ts-expect-error
       session.user.id = token.id
       return session;
     }

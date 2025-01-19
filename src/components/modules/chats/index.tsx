@@ -11,47 +11,64 @@ import {
   type Comment as CommentType,
 } from "@/validation/comment.validation";
 import { handleAddComment } from "@/actions/comments";
+import CommentAPI from "@/request/comment/comment.api";
 
 const Chats = ({ daoId }: { daoId: string }) => {
+  const api = new CommentAPI();
+
   const [value, setValue] = useState("");
   const [comments, setComments] = useState<CommentType[]>([]);
   const session = useSession();
 
   useEffect(() => {
     const fetchComments = async () => {
-      // TODO: FETCH COMMENTS
-      setComments([]);
+      const comments = await api.getComments(daoId);
+      const sorted = comments.sort(
+        (a, b) =>
+          new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+      );
+      setComments(sorted);
     };
 
     fetchComments();
   }, []);
 
   const handleClick = async () => {
-    if(session.status === "unauthenticated") {
+    if (session.status === "unauthenticated") {
       // TODO: show toast
     }
 
-    const success = await handleAddComment(value);
-    if (success) {
+    const id = await handleAddComment(value, daoId);
+    if (id) {
+      console.log(id);
       const comment = commentSchema.parse({
+        id,
+        daoId,
         comment: value,
-        ...session.data?.user,
+        name: session.data?.user?.name,
+        userId: session.data?.user?.id,
+        image: session.data?.user?.image,
       });
       setComments((prev) => [comment, ...prev]);
-    }
-    else {
+      setValue("");
+    } else {
       // TODO: SHOW TOAST
     }
   };
 
   return (
-    <>
+    <div className="bg-white bg-opacity-10 p-4 rounded-md">
       <div className="flex gap-2">
         <Input
           placeholder="Write a comment..."
           className="flex-1"
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleClick();
+            }
+          }}
         />
         <Button
           className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
@@ -62,9 +79,9 @@ const Chats = ({ daoId }: { daoId: string }) => {
         </Button>
       </div>
       {comments.map((comment, index) => (
-        <Comment key={index} {...comment} />
+        <Comment key={comment.id} {...comment} />
       ))}
-    </>
+    </div>
   );
 };
 

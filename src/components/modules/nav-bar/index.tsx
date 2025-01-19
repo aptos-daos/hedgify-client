@@ -1,22 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { PlusSquare } from "lucide-react";
 import Link from "next/link";
-import { WalletSelector } from "@/components/WalletSelector";
-import TwitterLoginButton from "./twitter-auth";
+import TwitterLoginButton from "../dao-create-form/twitter-auth";
+import Wallet from "./wallet-wrapper";
 
 const NavBar = () => {
   return (
-    <nav className="flex items-center justify-end gap-2 p-4">
+    <nav className="z-50 flex items-center justify-end gap-2 p-4 sticky top-0 bg-background/50 backdrop-blur-lg border-b">
       <TwitterLoginButton />
-      <Link href="/create-dao">
-        <Button>
-          <PlusSquare className="h-4 w-4" />
-          Create DAO
-        </Button>
-      </Link>
-      <div className="w-fit">
-        <WalletSelector />
-      </div>
+      <Wallet>
+        <Link href="/create-dao">
+          <Button>
+            <PlusSquare className="h-4 w-4" />
+            Create DAO
+          </Button>
+        </Link>
+      </Wallet>
     </nav>
   );
 };

@@ -36,16 +36,10 @@ export default class InviteAPI extends APIRequest {
     };
 
     try {
-      const response = await this.request<boolean>(config);
-
-      if (!response) {
-        throw new Error("No response from server when validating invite");
-      }
-
-      return response;
+      const response = await this.request<{ verified: boolean }>(config);
+      return response.verified;
     } catch (error) {
-      console.error("Failed to validate invite:", error);
-      throw error;
+      return false;
     }
   }
 

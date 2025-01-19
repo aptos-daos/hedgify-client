@@ -5,6 +5,7 @@ import DaoInitForm from "@/components/modules/dao-create-form";
 import { useSearchParams } from "next/navigation";
 import InviteAPI from "@/request/invite/invite.api";
 import DAOTokenHolderGuide from "@/components/modules/help";
+import Loading from "@/components/modules/loading";
 
 const CreateDao = () => {
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,7 @@ const CreateDao = () => {
   }, [paramInvite]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -45,7 +46,7 @@ const CreateDao = () => {
 
 const Page = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <CreateDao />
     </Suspense>
   );

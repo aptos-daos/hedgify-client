@@ -1,26 +1,46 @@
-import NextAuth from "next-auth";
-import Twitter from "next-auth/providers/twitter";
+import { AuthOptions, getServerSession } from "next-auth";
+import TwitterProvider from "next-auth/providers/twitter";
 
-export const { auth, handlers, signIn, signOut } = NextAuth({
-  providers: [Twitter],
+const authOptions: AuthOptions = {
+  pages: {
+    signIn: "/auth/signin",
+    signOut: "/auth/signout",
+    error: "/auth/error",
+    verifyRequest: "/auth/verify-request",
+  },
+  providers: [
+    TwitterProvider({
+      clientId: process.env.AUTH_TWITTER_ID as string,
+      clientSecret: process.env.AUTH_TWITTER_SECRET as string,
+      version: "2.0", 
+    }),
+  ],
+  secret: process.env.AUTH_SECRET,
   callbacks: {
-    signIn: ({ user, account, profile, email, credentials }) => {
-      user.id = profile?.id as string;
-      console.log(profile);
+    async signIn() {
       return true;
     },
-    jwt: async ({ token, trigger, profile, user, session }) => {
-      return token;
-    },
-    session: ({ session, token }) => {
-      // console.log("session",session);
-      // console.log("token",token);
-      // console.log("user",user);
-      // console.log("newSession",newSession);
-      // console.log("newSession",trigger);
-      // @ts-expect-error
-      session.user.id = token.id;
+    async session({ session, token }) {
+      console.log(session);
+      if (session.user) {
+        // @ts-ignore
+        session.user.id = token.sub as string;
+      }
       return session;
     },
-  },
-});
+    async jwt({ token, user, account, profile }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    }
+  }
+};
+
+/**
+ * Helper function to get the session on the server without having to import the authOptions object every single time
+ * @returns The session object or null
+ */
+const getSession = () => getServerSession(authOptions);
+
+export { authOptions, getSession };

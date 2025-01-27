@@ -1,8 +1,8 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import CommentAPI from "@/request/comment/comment.api";
 import { commentSchema } from "@/validation/comment.validation";
+import { getSession } from "@/lib/auth";
 
 const api = new CommentAPI();
 
@@ -11,7 +11,8 @@ export const handleAddComment = async (
   daoId: string
 ): Promise<string> => {
   try {
-    const session = await auth();
+    const session = await getSession();
+    console.log("session", session)
     if (!session?.user) {
       return "";
     }
@@ -19,6 +20,7 @@ export const handleAddComment = async (
     const obj = {
       comment,
       daoId,
+      // @ts-ignore
       userId: user.id!,
       image: user.image!,
       name: user.name!,

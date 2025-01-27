@@ -5,6 +5,7 @@ import "./globals.css";
 import { WalletProvider } from "@/provider/WalletProvider";
 import { Toaster } from "@/components/ui/toaster";
 import NavBar from "@/components/modules/nav-bar";
+import { getSession } from "@/lib/auth";
 
 const mFont = FontSans({
   subsets: ["latin"],
@@ -15,16 +16,17 @@ export const metadata: Metadata = {
   title: "DAOs",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${mFont.className} antialiased`}>
         <WalletProvider>
-          <RootLayoutProvider>
+          <RootLayoutProvider session={session}>
             <NavBar />
             {children}
             <Toaster />

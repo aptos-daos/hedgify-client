@@ -49,7 +49,7 @@ export default function DatePicker({
         <Button
           variant={"outline"}
           className={cn(
-            "w-full text-left font-normal bg-white bg-opacity-5 border border-gray-400 text-muted hover:text-muted hover:bg-white hover:bg-opacity-5",
+            "w-full text-left font-normal bg-white/5 border border-gray-400 text-muted hover:text-muted hover:bg-white/5",
             !date && "text-muted-foreground"
           )}
         >

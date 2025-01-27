@@ -135,7 +135,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               layoutId="image-upload"
               className={cn(
                 "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start h-64 w-full mx-auto rounded-md",
-                "shadow-sm"
+                "shadow-xs"
               )}
             >
               <motion.div
@@ -163,7 +163,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/50 to-transparent"
+                  className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-black/50 to-transparent"
                 >
                   <p className="text-white text-sm font-medium truncate">
                     {image.name}
@@ -205,7 +205,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
               <motion.div
                 variants={secondaryVariant}
-                className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
+                className="absolute opacity-0 border border-dashed border-primary inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
               />
             </>
           )}

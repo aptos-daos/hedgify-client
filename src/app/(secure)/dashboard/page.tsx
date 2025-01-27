@@ -41,7 +41,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <main className="md:max-w-screen-md mx-auto space-y-2">
+    <main className="md:max-w-(--breakpoint-md) mx-auto space-y-2">
       <div className="flex justify-end">
         <Button onClick={handleCopyClick}>
           <Clipboard />

@@ -35,7 +35,7 @@ const MyDaoToken = ({
     { label: "Progress", value: `${progressSol} SOL / ${totalSol} SOL` },
   ];
   return (
-    <div className="p-6 rounded-lg shadow-sm max-w-md">
+    <div className="p-6 rounded-lg shadow-xs max-w-md">
       <div className="space-y-4">
         <div>
           <h2 className="text-gray-600 text-lg font-medium">Your DAO tokens</h2>

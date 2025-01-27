@@ -11,7 +11,6 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import InviteAPI from "@/request/invite/invite.api";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { useSession } from "next-auth/react";
-import DAOAPI from "@/request/dao/dao.api";
 import { DaoFormData } from "@/validation/dao.validation";
 import { useContract } from "@/hooks/use-contract";
 import { useDao } from "@/hooks/use-dao";
@@ -110,7 +109,7 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, y: 0, x: 0 }}
-            className="flex-1 hidden md:block !m-0 min-w-96"
+            className="flex-1 hidden md:block m-0! min-w-96"
           >
             {children}
           </motion.div>

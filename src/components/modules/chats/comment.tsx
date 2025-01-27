@@ -23,7 +23,7 @@ const Comment: React.FC<CommentType> = ({
 
   return (
     <div className="flex items-start space-x-4 p-4">
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <Image
           src={image}
           alt={`${name}'s avatar`}
@@ -32,7 +32,7 @@ const Comment: React.FC<CommentType> = ({
           className="rounded-full"
         />
       </div>
-      <div className="flex-grow">
+      <div className="grow">
         <div className="flex items-center space-x-2">
           <h4 className="font-semibold">{name}</h4>
           {createdAt && (

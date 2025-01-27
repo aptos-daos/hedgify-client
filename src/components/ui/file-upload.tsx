@@ -69,8 +69,8 @@ export const FileUpload = ({
           whileHover="hover"
           className={cn(
             "group/file flex items-center justify-between p-4 rounded-lg",
-            "bg-white bg-opacity-10",
-            "shadow-sm hover:shadow-lg transition-shadow duration-300",
+            "bg-white/10",
+            "shadow-xs hover:shadow-lg transition-shadow duration-300",
             isDragActive && "border-sky-400 border-dashed"
           )}
         >
@@ -100,7 +100,7 @@ export const FileUpload = ({
           </div>
 
           <Button
-            className={"transition-all duration-300 shadow-sm hover:shadow-md"}
+            className={"transition-all duration-300 shadow-xs hover:shadow-md"}
             onClick={(e) => {
               e.stopPropagation();
               handleClick();
@@ -130,7 +130,7 @@ export const FileUpload = ({
               layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
               className={cn(
                 "relative overflow-hidden z-40",
-                "bg-white bg-opacity-10 shadow-sm",
+                "bg-white/10 shadow-xs",
                 "flex flex-col items-start justify-start md:h-24 p-4",
                 "w-full mx-auto rounded-md",
                 "hover:shadow-md transition-shadow duration-300"
@@ -151,8 +151,8 @@ export const FileUpload = ({
                     animate={{ opacity: 1 }}
                     layout
                     className={cn(
-                      "rounded-lg px-2 py-1 w-fit flex-shrink-0",
-                      "text-sm text-neutral-600 bg-neutral-100 shadow-sm"
+                      "rounded-lg px-2 py-1 w-fit shrink-0",
+                      "text-sm text-neutral-600 bg-neutral-100 shadow-xs"
                     )}
                   >
                     {(file.size / (1024 * 1024 * 1024)).toFixed(2)} MB

@@ -58,7 +58,7 @@ const Chats = ({ daoId }: { daoId: string }) => {
   };
 
   return (
-    <div className="bg-white bg-opacity-10 p-4 rounded-md">
+    <div className="bg-white/10 p-4 rounded-md">
       <div className="flex gap-2">
         <Input
           placeholder="Write a comment..."

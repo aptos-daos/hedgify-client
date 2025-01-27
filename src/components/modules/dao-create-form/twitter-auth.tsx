@@ -27,7 +27,7 @@ const TwitterLoginButton = async () => {
       }}
     >
       <Button type="submit">
-        <XIcon className="!w-4 !h-4" />
+        <XIcon className="w-4! h-4!" />
         Sign in with Twitter</Button>
     </form>
   );

@@ -32,8 +32,8 @@ interface FormSelectProps extends BaseFormProps {
 
 const getFormFieldClassNames = (formik: any, name: string) => 
   cn(
-    "w-full bg-opacity-5 text-white",
-    formik.errors[name] && formik.touched[name] ? "border-red-500 bg-red-100" : ""
+    "w-full bg-white/5 text-white",
+    formik.errors[name] && formik.touched[name] ? "border-red-500 bg-red-800/10" : ""
   );
 
 const FormField: React.FC<{ formik: any; name: string }> = ({ formik, name }) => (

@@ -12,7 +12,6 @@ export const handleAddComment = async (
 ): Promise<string> => {
   try {
     const session = await auth();
-
     if (!session?.user) {
       return "";
     }
@@ -36,7 +35,7 @@ export const handleAddComment = async (
 };
 
 export const handleToggleLike = async (commentId: string): Promise<string> => {
-  const session = await auth();
+  // const session = await auth();
   // const resp = await api.toggleLikeComment(commentId, session?.user?.id!);
   //TODO: HANDLE LIKE
   return "";

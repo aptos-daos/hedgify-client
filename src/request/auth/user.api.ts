@@ -67,15 +67,15 @@ export default class UserAPI extends APIRequest {
    * @param signature The signature from the user’s wallet.
    * @throws If any required param is missing or if server returns an invalid response.
    */
-  async login(account: string, message: string, signature: string) {
-    if (!account || !message || !signature) {
+  async login(address: string, publicKey: string, message: string, signature: string) {
+    if (!address || !message || !signature) {
       throw new Error("Account, message, and signature are all required to login.");
     }
 
     const config = {
       url: "/auth",
       method: "POST",
-      data: { account, message, signature },
+      data: { address, publicKey, message, signature },
     };
 
     try {

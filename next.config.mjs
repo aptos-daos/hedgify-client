@@ -9,13 +9,17 @@ const nextConfig = {
         protocol: "https",
         hostname: "raw.githubusercontent.com",
       },
-      {
-        protocol: "https",
-        hostname: "storage.googleapis.com",
-      },
+      // {
+      //   protocol: "https",
+      //   hostname: "storage.googleapis.com",
+      // },
       {
         protocol: "https",
         hostname: "pbs.twimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
       },
     ],
   },
@@ -23,8 +27,8 @@ const nextConfig = {
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: ['remark-gfm'],
-    rehypePlugins: [['rehype-katex', { strict: true, throwOnError: true }]],
+    remarkPlugins: ["remark-gfm"],
+    rehypePlugins: [["rehype-katex", { strict: true, throwOnError: true }]],
   },
 });
 

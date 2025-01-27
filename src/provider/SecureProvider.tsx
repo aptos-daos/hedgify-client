@@ -1,19 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getTokenList } from "@/lib/panora";
-import { useTokenStore } from "@/store/token";
+import React from "react";
+import { notFound } from "next/navigation";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 const SecureProvider = ({ children }: { children: React.ReactNode }) => {
-  const { setTokenList } = useTokenStore();
-
-  useEffect(() => {
-    const fetchTokenList = async () => {
-      const tokens = await getTokenList();
-      setTokenList(tokens);
-    };
-    fetchTokenList();
-  }, []);
+  const { connected } = useWallet();
+  // if (!connected) return notFound();
 
   return <>{children}</>;
 };

@@ -2,6 +2,7 @@ import Chats from "@/components/modules/chats";
 import PreviewDisplay from "@/components/modules/preview-display";
 import SwapWidget from "@/components/modules/swap-widget";
 import TradeView from "@/components/modules/tradeview-widget";
+import { Separate } from "@/components/molecules/separate-layout";
 import DAOAPI from "@/request/dao/dao.api";
 import { notFound } from "next/navigation";
 
@@ -21,13 +22,15 @@ export default async function Page({
 
   return (
     <main>
-      <div className="flex justify-between gap-2">
-        <PreviewDisplay {...dao} />
-        <div>
+      <Separate.Root>
+        <Separate.Layout>
+          <PreviewDisplay {...dao} />
+        </Separate.Layout>
+        <Separate.Layout>
           <SwapWidget />
           <TradeView {...dao} />
-        </div>
-      </div>
+        </Separate.Layout>
+      </Separate.Root>
       <Chats daoId={dao.id} />
     </main>
   );

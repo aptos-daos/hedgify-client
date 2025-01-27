@@ -1,22 +1,23 @@
 import React from "react";
 import { DaoData } from "@/validation/dao.validation";
-import { format } from "date-fns";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { format, addDays } from "date-fns";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FUNDING_PERIOD, FUNDING_HOLD_PERIOD } from "@/constants";
 
-// interface Props extends DaoData {}
+interface Props extends DaoData {
+  tradingStartsAt?: Date;
+}
 
-const DaoDetails: React.FC<DaoData> = ({
+const DaoDetails: React.FC<Props> = ({
   description,
   treasuryAddress,
   daoCoinAddress,
   createdAt,
-  tradingStartsAt,
+  fundingStarts,
+  tradingStartsAt = addDays(
+    fundingStarts,
+    FUNDING_PERIOD + FUNDING_HOLD_PERIOD
+  ),
 }) => {
   const data = {
     "Founded By": "John Doe",
@@ -25,7 +26,7 @@ const DaoDetails: React.FC<DaoData> = ({
     "Treasury Address": treasuryAddress,
     "DAO Coin Address": daoCoinAddress,
     Created: format(createdAt, "dd MMM yyyy"),
-    "Treading Date": format(tradingStartsAt!, "dd MMM yyyy"),
+    "Treading Date": format(tradingStartsAt, "dd MMM yyyy"),
   };
 
   return (

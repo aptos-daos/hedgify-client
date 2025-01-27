@@ -5,20 +5,23 @@ import DataTable, { type Column } from "@/components/molecules/DataTable";
 import { Button } from "@/components/ui/button";
 import { Clipboard } from "lucide-react";
 import useInvite from "@/hooks/use-invite";
-
-interface Invite {
-  name: string;
-  code: string;
-  user: string;
-  expiresAt: string;
-}
+import { formatDate } from "date-fns";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Dashboard = () => {
-  const { createInviteCode } = useInvite(true);
+  const queryClient = useQueryClient();
+  const { getInviteCodes, createInviteCode } = useInvite();
+  const { data: codes = [] } = useQuery({
+    queryKey: ["inviteCodes"],
+    queryFn: getInviteCodes,
+  });
+
   const handleCopyClick = async () => {
     const code = await createInviteCode();
     await navigator.clipboard.writeText(code);
+    await queryClient.invalidateQueries({ queryKey: ["inviteCodes"] });
   };
+
   const columns: Column<Invite>[] = [
     {
       id: "code",
@@ -33,7 +36,7 @@ const Dashboard = () => {
     {
       id: "expiresAt",
       header: "Expires At",
-      cell: (row) => row.expiresAt,
+      cell: (row) => formatDate(row.expiresAt, "yyyy-MM-dd HH:mm"),
     },
   ];
 
@@ -45,7 +48,7 @@ const Dashboard = () => {
           Generate A New Code
         </Button>
       </div>
-      <DataTable<Invite> data={[]} columns={columns} />
+      <DataTable<Invite> data={codes} columns={columns} />
     </main>
   );
 };

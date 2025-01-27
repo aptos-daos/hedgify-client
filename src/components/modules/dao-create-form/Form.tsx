@@ -1,20 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { debounce } from "lodash";
 import { useFormik } from "formik";
 import { Button } from "@/components/ui/button";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { daoSchema } from "@/validation/dao.validation";
-import { useSession } from "next-auth/react";
-import FormInput from "./form-input";
+import { daoFormSchema, daoSchema } from "@/validation/dao.validation";
+import { FormInput, FormSelect } from "./form-input";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { compressImage } from "@/utils/image";
 import uploadFile from "@/utils/upload-file";
 import { type DaoFormData } from "@/validation/dao.validation";
+import { getKebab, getTicker } from "@/utils/formatters";
+import { FileUpload } from "@/components/ui/file-upload";
+import { AVAILABLE_FUND_OPTIONS } from "@/constants";
+import { useSession } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 interface Props {
   onSubmit: (data: DaoFormData) => void;
+  address: string;
 }
 
-const DAOForm: React.FC<Props> = ({ onSubmit }) => {
+const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
+  const { data: session } = useSession();
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileUpload = async (file: File | null) => {
@@ -27,22 +34,51 @@ const DAOForm: React.FC<Props> = ({ onSubmit }) => {
   const formik = useFormik<DaoFormData>({
     initialValues: {
       title: "",
-      description: "",
+      slug: "",
       fundTicker: "",
+      description: "",
+      userXHandle: session?.user?.name!,
+      daoXHandle: "",
       telegramHandle: "",
       telegramGroup: "",
-      poc: "",
+      website: "",
       fundingStarts: new Date(),
       indexFund: 0,
+      profits: 0,
       poster: "",
+      walletAddress: address
     },
-    validationSchema: toFormikValidationSchema(daoSchema),
+    validationSchema: toFormikValidationSchema(daoFormSchema),
     onSubmit: async (values) => {
-      if (!file) return;
+      console.log(values);
+      if (!file) {
+        toast({
+          title: "Upload Poster",
+          variant: "destructive",
+        });
+        return;
+      }
       const url = await uploadFile(file);
       onSubmit({ ...values, poster: url });
     },
   });
+  console.log(formik);
+
+  useEffect(() => {
+    const checkSlug = debounce(async (slug: string) => {
+      // const resp = await api.checkSlug(slug);
+      // TODO: IMPLEMENT FETCH
+      if (true) {
+        formik.setFieldValue("slug", slug);
+        return;
+      }
+      // const randomString = Math.random().toString(36).substring(2, 8);
+      // checkSlug(`${slug}-${randomString}`);
+    }, 0);
+
+    formik.setFieldValue("fundTicker", getTicker(formik.values.title));
+    checkSlug(getKebab(formik.values.title));
+  }, [formik.values.title]);
 
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
@@ -54,9 +90,14 @@ const DAOForm: React.FC<Props> = ({ onSubmit }) => {
         formik={formik}
       />
       <FormInput
+        name="slug"
+        label="Slug Name"
+        placeholder="Enter DAO Slug"
+        formik={formik}
+      />
+      <FormInput
         name="fundTicker"
-        label="Fund Ticker"
-        placeholder="e.g., BTC, ETH"
+        placeholder="e.g., APT, ZAAP"
         formik={formik}
       />
       <FormInput
@@ -66,37 +107,52 @@ const DAOForm: React.FC<Props> = ({ onSubmit }) => {
         type="textarea"
         formik={formik}
       />
+      <FormInput name="daoXHandle" placeholder="@username" formik={formik} />
       <FormInput
         name="telegramHandle"
-        label="Telegram Handle"
         placeholder="@username"
         formik={formik}
       />
       <FormInput
         name="telegramGroup"
-        label="Telegram Group"
         placeholder="@groupname (optional)"
         formik={formik}
         required={false}
       />
       <FormInput
-        name="poc"
-        label="Point of Contact at DeFi"
-        placeholder="Enter the name of your DeFi contact"
-        formik={formik}
-      />
-      <FormInput
         name="fundingStarts"
         type="date"
-        label="Funding Starts"
         placeholder="Enter the date your fund will begin"
         formik={formik}
       />
+      <FormInput
+        name="website"
+        placeholder="https://hedgify.money"
+        formik={formik}
+        required={false}
+      />
+      <FormInput
+        name="profits"
+        type="number"
+        placeholder="Enter the Profit share Fund Manager wants to keep"
+        formik={formik}
+      />
+      <FormSelect
+        name="indexFund"
+        options={AVAILABLE_FUND_OPTIONS.map((item) => ({
+          key: item.toLocaleString(),
+          value: item.toString(),
+        }))}
+        placeholder="Enter the Profit share Fund Manager wants to keep"
+        formik={formik}
+      />
+
+      <FileUpload />
 
       <Button
         type="submit"
         className="w-full font-semibold"
-        disabled={formik.isSubmitting || !formik.isValid}
+        // disabled={formik.isSubmitting || !formik.isValid}
       >
         {formik.isSubmitting ? "Submitting..." : "Submit"}
       </Button>

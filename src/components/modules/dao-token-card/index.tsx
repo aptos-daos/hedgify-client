@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Copy } from "lucide-react";
-import { formatDate } from "@/utils/formatters";
+import { format } from "date-fns";
 
 interface DAOTokenProps {
   tokenName: string;
@@ -28,6 +28,10 @@ const DAOTokenCard = ({
   progressTotal,
   tokenSymbol = "APT",
 }: DAOTokenProps) => {
+  const formatDate = (date: Date): string => {
+    return format(date, "MM/dd/yyyy h:mm a");
+  };
+
   const formatAddress = (address: string) => {
     if (address.length < 12) return address;
     return `${address.slice(0, 4)}...${address.slice(-4)}`;

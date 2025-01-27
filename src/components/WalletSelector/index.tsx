@@ -6,7 +6,6 @@ import {
   WalletSortingOptions,
   groupAndSortWallets,
   isAptosConnectWallet,
-  isInstallRequired,
   truncateAddress,
   APTOS_CONNECT_ACCOUNT_URL,
   WalletItem,
@@ -53,7 +52,14 @@ export function WalletSelector({
 }: Props) {
   const prevConnectedRef = useRef<boolean | null>(null);
   const prevAddressRef = useRef<string | null | undefined>(null);
-  const { account, connected, disconnect, wallet, signMessage } = useWallet();
+  const {
+    account,
+    connected,
+    disconnect,
+    wallet,
+    signMessage,
+    signMessageAndVerify,
+  } = useWallet();
   const userApi = new UserAPI();
 
   const { toast } = useToast();
@@ -75,11 +81,20 @@ export function WalletSelector({
 
           // Ask the user to sign the message
           const response = await signMessage({ message, nonce });
+          console.log(response);
 
-          if (response?.fullMessage && response?.signature) {
+          if (
+            account.publicKey &&
+            response.fullMessage &&
+            response.signature &&
+            typeof response.signature === "string"
+            && typeof account.publicKey === "string"
+          ) {
             // Call the login API after a successful signature
+            // TODO: check params
             await userApi.login(
               account.address,
+              account.publicKey,
               response.fullMessage,
               response.signature as string
             );
@@ -157,7 +172,7 @@ function ConnectWalletDialog({
 
   // Utility function to filter wallets
   const filteredWallets = wallets.filter((wallet) =>
-    ["Petra", "Martian","Continue with Google"].includes(wallet.name)
+    ["Petra", "Martian", "Continue with Google"].includes(wallet.name)
   );
 
   const { aptosConnectWallets, availableWallets, installableWallets } =
@@ -275,45 +290,48 @@ function MoreWalletsView({
 }
 
 function WalletRowItem({ wallet, isAptosConnect = false }: WalletRowItemProps) {
-  return (
-    <WalletItem wallet={wallet}>
-      {isInstallRequired(wallet) ? (
+  const isInstallRequired = (wallet: any) => {
+    // Implement your install check logic here
+    return false; // placeholder
+  };
+
+  const renderContent = () => {
+    if (isInstallRequired(wallet)) {
+      return (
         <Button
-          size="lg"
-          variant="secondary"
-          className="w-full flex justify-between p-3 h-14"
+          variant="outline"
+          className="w-full flex items-center justify-between p-3 space-x-4"
         >
-          <div className="flex items-center">
-            <WalletItem.Icon className="h-8 w-8 mr-3" />
+          <div className="flex items-center space-x-3">
+            <WalletItem.Icon className="size-8" />
             <WalletItem.Name className="font-medium text-primary" />
           </div>
           <WalletItem.InstallLink>
-            <div className="w-[26px] h-[26px] rounded-full bg-blue place-content-center">
-              <Link className="w-4 mx-auto h-4 text-foreground" />
+            <div className="size-[26px] bg-blue rounded-full grid place-items-center">
+              <Link className="size-4 text-foreground" />
             </div>
           </WalletItem.InstallLink>
         </Button>
-      ) : (
-        <WalletItem.ConnectButton asChild>
-          <Button
-            size="lg"
-            variant="secondary"
-            className={`w-full flex ${
-              isAptosConnect ? "justify-between" : "justify-start"
-            } p-3 h-14`}
-          >
-            <div className="flex items-center">
-              <WalletItem.Icon className="h-8 w-8 mr-3" />
-              <WalletItem.Name className="font-medium text-primary" />
-            </div>
-            {isAptosConnect && (
-              <div className="w-[26px] h-[26px] rounded-full place-content-center">
-                <ArrowRight className="w-5 mx-auto h-5 text-foreground" />
-              </div>
-            )}
-          </Button>
-        </WalletItem.ConnectButton>
-      )}
-    </WalletItem>
-  );
+      );
+    }
+
+    return (
+      <WalletItem.ConnectButton asChild>
+        <Button
+          variant="outline"
+          className={`w-full flex items-center p-3 space-x-3 ${
+            isAptosConnect ? "justify-between" : "justify-start"
+          }`}
+        >
+          <div className="flex items-center space-x-3">
+            <WalletItem.Icon className="size-8" />
+            <WalletItem.Name className="font-medium text-foreground" />
+          </div>
+          {isAptosConnect && <ArrowRight className="size-5 text-foreground" />}
+        </Button>
+      </WalletItem.ConnectButton>
+    );
+  };
+
+  return <WalletItem wallet={wallet}>{renderContent()}</WalletItem>;
 }

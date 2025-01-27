@@ -1,6 +1,8 @@
 import instance from "../api/api.instance";
-import APIRequest, { APIError } from "../api/APIRequest";
-import { DaoData } from "@/validation/dao.validation";
+import APIRequest from "../api/APIRequest";
+import { DaoData, DaoFormData } from "@/validation/dao.validation";
+
+type DaoCreateType = DaoFormData & {inviteCode: string};
 
 /**
  * DAOAPI class provides methods to:
@@ -9,18 +11,18 @@ import { DaoData } from "@/validation/dao.validation";
  * 3) Delete a DAO
  * 4) Get all DAOs
  * 5) Get a single DAO by ID
- */
+*/
 export default class DAOAPI extends APIRequest {
   constructor() {
     super(instance);
   }
-
+  
   /**
    * Creates a new DAO with the provided data
    * @param daoData The data for creating the new DAO
    * @throws If required data is missing or if the server response is invalid
-   */
-  async createDAO(daoData: Partial<DaoData>): Promise<DaoData> {
+  */
+  async createDAO(daoData: DaoCreateType): Promise<DaoData> {
     const config = {
       url: "/dao",
       method: "POST",
@@ -28,8 +30,7 @@ export default class DAOAPI extends APIRequest {
     };
 
     try {
-      const response = await this.request<DaoData>(config)
-      return response;
+      return await this.request<DaoData>(config);
     } catch (error) {
       console.error("Failed to create DAO:", error);
       throw error;
@@ -42,10 +43,7 @@ export default class DAOAPI extends APIRequest {
    * @param updateData The data to update
    * @throws If ID is missing or if server returns an invalid response
    */
-  async updateDAO(
-    id: string,
-    updateData: Partial<DaoData>
-  ): Promise<DaoData> {
+  async updateDAO(id: string, updateData: Partial<DaoData>): Promise<DaoData> {
     if (!id) {
       throw new Error("DAO ID is required for updating");
     }
@@ -130,6 +128,34 @@ export default class DAOAPI extends APIRequest {
       return response;
     } catch (error) {
       console.error("Failed to fetch DAO:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Checks if a slug is available for use
+   * @param slug The slug to check availability for
+   * @returns Object containing availability status
+   * @throws If slug is missing or if server returns an invalid response
+   */
+  async checkSlug(slug: string): Promise<{ available: boolean }> {
+    if (!slug) {
+      throw new Error("Slug is required");
+    }
+
+    const config = {
+      url: `/dao/slug/${slug}`,
+      method: "GET",
+    };
+
+    try {
+      const response = await this.request<{ available: boolean }>(
+        config,
+        false
+      );
+      return response;
+    } catch (error) {
+      console.error("Failed to check slug availability:", error);
       throw error;
     }
   }

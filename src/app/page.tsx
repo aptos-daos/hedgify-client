@@ -1,50 +1,24 @@
-"use client";
-
-import { useDao } from "@/hooks/use-dao";
 import React from "react";
-import { isAfter, isBefore, parseISO } from "date-fns";
-import { DaoData } from "@/validation/dao.validation";
-import DaoCardList from "@/components/modules/DaoCardList";
+import { FlipWords } from "@/components/ui/flip-words";
+import HomeCards from "@/components/modules/home-cards/page";
 
 const Home: React.FC = () => {
-  const { daos, loading, error } = useDao(true);
-  const currentDate = new Date();
-
-  if (error) {
-    return <div>Error loading data</div>;
-  }
-
-  const featuredFunds = daos.filter((fund: DaoData) => {
-    return (
-      isAfter(currentDate, fund.fundingStarts) &&
-      isBefore(currentDate, parseISO(String(fund.fundingEnds)))
-    );
-  });
-
-  const upcomingFunds = daos.filter((fund: DaoData) => {
-    return isAfter(fund.fundingStarts, currentDate);
-  });
+  const words = ["memes", "tokens", "RWAs", "Whatever"];
 
   return (
-    <main className="pt-20">
+    <main className="pt-20 space-y-4">
       <section className="space-y-2 text-center">
-        <h1 className="font-extrabold">Raise Money.</h1>
-        <h1 className="font-extrabold">Trade Memes.</h1>
+        <h1 className="font-extrabold">Pool Money.</h1>
+        <h1 className="font-extrabold">
+          Trade
+          <FlipWords words={words} />
+        </h1>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa est
           laudantium vero?
         </p>
       </section>
-      <DaoCardList
-        title="Featured Funds"
-        daos={featuredFunds}
-        loading={loading}
-      />
-      <DaoCardList
-        title="Upcoming Funds"
-        daos={upcomingFunds}
-        loading={loading}
-      />
+      <HomeCards />
     </main>
   );
 };

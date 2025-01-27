@@ -24,3 +24,10 @@ interface Token {
   isInPanoraTokenList: boolean;
   isBanned: boolean;
 }
+
+interface Invite {
+  name: string;
+  code: string;
+  user: string;
+  expiresAt: string;
+}

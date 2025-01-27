@@ -1,3 +1,4 @@
+import HomeCardWrapper from "../molecules/wrapper/home-card-wrapper";
 import { DaoData } from "@/validation/dao.validation";
 import React from "react";
 import { DaoCard } from "../molecules/DaoCard";
@@ -8,22 +9,22 @@ interface Props {
   loading?: boolean;
 }
 
-const DaoCardList = ({ title, daos, loading }: Props) => {
+const DaoCardList = ({ title, daos }: Props) => {
   return (
-    <section>
-      <div className="relative py-4">
-        <div className="p-2 px-4 bg-primary w-fit rounded-full absolute left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <h2 className="text-xs font-bold tracking-widest text-primary-foreground">
-            {title.toLocaleUpperCase()}
-          </h2>
-        </div>
-        <div className="border rounded-xl min-h-60 border-foreground p-4 bg-white bg-opacity-10">
-          {daos.map((fund: DaoData) => (
-            <DaoCard {...fund} key={fund.id} />
-          ))}
-        </div>
-      </div>
-    </section>
+    <HomeCardWrapper
+      title={title}
+      className="p-4 pt-7 bg-white bg-opacity-10 flex flex-wrap gap-5 transition h-[26rem] w-[50rem]"
+    >
+      {daos.map((fund: DaoData) => (
+        <DaoCard {...fund} key={fund.id} />
+      ))}
+            {daos.map((fund: DaoData) => (
+        <DaoCard {...fund} key={fund.id} />
+      ))}
+            {daos.map((fund: DaoData) => (
+        <DaoCard {...fund} key={fund.id} />
+      ))}
+    </HomeCardWrapper>
   );
 };
 

@@ -1,22 +1,14 @@
 import { generateInviteCode } from "@/utils/invite-code";
 import { useRequest } from "@/request/api/request.hook";
 import InviteAPI from "@/request/invite/invite.api";
-import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useState, useEffect } from "react";
 
-const useInvite = (secure: boolean = false) => {
-  const { connected } = useWallet();
+const useInvite = (secure = false) => {
   const api = new InviteAPI();
-  const [codes, setCodes] = useState<string[]>([]);
+  const [codes, setCodes] = useState<Invite[]>([]);
   const { handleRequest } = useRequest();
 
-  // useEffect(() => {
-  //   if (secure) {
-  //     getInviteCodes().then((codes) => {
-  //       setCodes(codes);
-  //     });
-  //   }
-  // }, [secure]);
+
 
   const createInviteCode = async (): Promise<string> => {
     const code = generateInviteCode();
@@ -30,8 +22,8 @@ const useInvite = (secure: boolean = false) => {
     return !!success;
   };
 
-  const getInviteCodes = async (): Promise<string[]> => {
-    const fetchedCodes = await handleRequest<string[]>(() => api.listInvites());
+  const getInviteCodes = async (): Promise<Invite[]> => {
+    const fetchedCodes = await handleRequest<Invite[]>(() => api.listInvites());
     if (fetchedCodes) {
       setCodes(fetchedCodes);
       return fetchedCodes;

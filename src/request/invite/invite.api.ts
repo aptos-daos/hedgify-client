@@ -12,7 +12,7 @@ export default class InviteAPI extends APIRequest {
     };
 
     try {
-      const response = await this.request<string[]>(config);
+      const response = await this.request<Invite[]>(config);
 
       if (!response) {
         throw new Error("No response from server when fetching invites");

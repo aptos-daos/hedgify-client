@@ -12,6 +12,7 @@ import {
 } from "@/validation/comment.validation";
 import { handleAddComment } from "@/actions/comments";
 import CommentAPI from "@/request/comment/comment.api";
+import { toast } from "@/hooks/use-toast";
 
 const Chats = ({ daoId }: { daoId: string }) => {
   const api = new CommentAPI();
@@ -52,7 +53,7 @@ const Chats = ({ daoId }: { daoId: string }) => {
       setComments((prev) => [comment, ...prev]);
       setValue("");
     } else {
-      // TODO: SHOW TOAST
+      toast({ title: "Server Error", variant: "destructive" });
     }
   };
 

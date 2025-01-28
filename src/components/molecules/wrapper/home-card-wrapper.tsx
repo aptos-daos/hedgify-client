@@ -17,29 +17,22 @@ const HomeCardWrapper = ({
   className,
 }: Props) => {
   return (
-    <section>
-      <BottomTopAnimation className="relative py-6 w-fit m-auto">
+    <section className={cn("w-full px-4 md:px-0", className)}>
+      <BottomTopAnimation className="relative py-4 md:py-6 w-full md:w-fit m-auto">
         <div
           className={cn(
             "absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 -translate-y-1/2",
             crown && "-translate-y-3/4"
           )}
         >
-          {crown && <Crown className="text-primary" size={24} />}
-          <div className="p-2 px-4 bg-primary w-fit rounded-full">
-            <h2 className="text-xs font-bold tracking-widest text-primary-foreground">
+          {crown && <Crown className="text-primary" size={20} />}
+          <div className="p-1.5 md:p-2 px-3 md:px-4 bg-primary w-fit rounded-full">
+            <h2 className="text-[10px] md:text-xs font-bold tracking-widest text-primary-foreground">
               {title.toLocaleUpperCase()}
             </h2>
           </div>
         </div>
-        <div
-          className={cn(
-            "border rounded-xl min-h-60 border-foreground",
-            className
-          )}
-        >
-          {children}
-        </div>
+        {children}
       </BottomTopAnimation>
     </section>
   );

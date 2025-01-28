@@ -4,7 +4,7 @@ import { useDao } from "@/hooks/use-dao";
 import React from "react";
 import { isAfter, differenceInDays } from "date-fns";
 import { DaoData } from "@/validation/dao.validation";
-import DaoCardList from "@/components/modules/DaoCardList";
+import DaoCardList from "./dao-card-list";
 import { FUNDING_PERIOD } from "@/constants";
 
 const HomeCards: React.FC = () => {

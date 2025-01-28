@@ -1,17 +1,23 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import _ from "lodash";
+import { motion, AnimatePresence } from "framer-motion";
 import CoinListCard from "./CoinListCard";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useTokenStore } from "@/store/token";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 
 interface Props {
   coins: any[];
   onClose: (id: number) => void;
 }
 
-// Cache interface
 interface SearchCache {
   [key: string]: Token[];
 }
@@ -22,7 +28,6 @@ const CoinList = ({ onClose }: Props) => {
   const [filteredTokens, setFilteredTokens] = useState<Token[]>(tokenList);
   const [searchCache, setSearchCache] = useState<SearchCache>({});
 
-  // Memoize the search function to prevent recreation on every render
   const searchTokens = useMemo(
     () =>
       _.debounce((query: string, tokens: Token[]) => {
@@ -31,7 +36,6 @@ const CoinList = ({ onClose }: Props) => {
           return;
         }
 
-        // Check if we have cached results for this query
         if (searchCache[query]) {
           setFilteredTokens(searchCache[query]);
           return;
@@ -44,7 +48,6 @@ const CoinList = ({ onClose }: Props) => {
             token.symbol.toLowerCase().includes(searchLower)
         );
 
-        // Cache the results
         setSearchCache((prevCache) => ({
           ...prevCache,
           [query]: filtered,
@@ -55,81 +58,99 @@ const CoinList = ({ onClose }: Props) => {
     [searchCache]
   );
 
-  // Clear cache when token list changes
   useEffect(() => {
     setSearchCache({});
     setFilteredTokens(tokenList);
   }, [tokenList]);
 
-  // Handle search query changes
   useEffect(() => {
     searchTokens(searchQuery, tokenList);
-    
-    // Cleanup function for debounce
     return () => {
       searchTokens.cancel();
     };
   }, [searchQuery, tokenList, searchTokens]);
 
-  // Memoize the skeleton renderer
   const renderSkeletons = useCallback(
     () => (
-      <>
+      <AnimatePresence>
         {[...Array(5)].map((_, index) => (
-          <div key={index} className="flex items-center space-x-4 p-4">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2, delay: index * 0.05 }}
+            className="flex items-center space-x-4 p-4"
+          >
             <Skeleton className="h-12 w-12 rounded-full" />
             <div className="space-y-2">
               <Skeleton className="h-4 w-[200px]" />
               <Skeleton className="h-4 w-[100px]" />
             </div>
-          </div>
+          </motion.div>
         ))}
-      </>
+      </AnimatePresence>
     ),
     []
   );
 
-  // Memoize token list rendering for better performance
   const renderedTokenList = useMemo(
     () => (
-      <>
+      <AnimatePresence mode="sync">
         {filteredTokens.map((token, index) => (
-          <CoinListCard
+          <motion.div
             key={`${token.symbol}-${index}`}
-            token={token}
-            className="hover:bg-gray-50 transition-colors cursor-pointer"
-            onClick={() => {
-              onClose(index);
-            }}
-          />
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2, delay: index * 0.05 }}
+          >
+            <CoinListCard
+              token={token}
+              className="hover:bg-white/15 transition-colors cursor-pointer"
+              onClick={() => onClose(index)}
+            />
+          </motion.div>
         ))}
         {filteredTokens.length === 0 && searchQuery && (
-          <div className="text-center py-4 text-zinc-500">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="text-center py-4 text-muted"
+          >
             {`No tokens found matching "{${searchQuery}}"`}
-          </div>
+          </motion.div>
         )}
-      </>
+      </AnimatePresence>
     ),
-    [filteredTokens, searchQuery, tokenList, onClose]
+    [filteredTokens, searchQuery, onClose]
   );
 
   return (
-    <div className="space-y-4 p-4">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+    <DrawerContent>
+      <DrawerHeader className="relative">
+        <DrawerTitle hidden>Select Coin</DrawerTitle>
+        <Search size={14} className="absolute left-6 top-1/2 transform -translate-y-1/2 text-primary" />
         <Input
           type="text"
           placeholder="Search by name, symbol, or address"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
+          className="pl-8"
         />
-      </div>
-
-      <div className="h-96 overflow-y-auto space-y-2">
+      </DrawerHeader>
+      <motion.div
+        layout
+        className="space-y-2 p-4 overflow-y-scroll"
+        transition={{delay: 0.2}}
+      >
         {tokenList.length === 0 ? renderSkeletons() : renderedTokenList}
-      </div>
-    </div>
+      </motion.div>
+      <DrawerFooter className="text-xs">
+        Fetched From Panora
+      </DrawerFooter>
+    </DrawerContent>
   );
 };
 

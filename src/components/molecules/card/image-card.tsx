@@ -1,10 +1,8 @@
 import React from "react";
 import {
   Card,
-  CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
 } from "@/components/ui/card";
 import { DaoData } from "@/validation/dao.validation";
 import Image from "next/image";
@@ -28,7 +26,7 @@ export function ImageCard({
   descriptionView = false,
 }: Props) {
   return (
-    <Card className={cn("w-fit bg-white p-4 space-y-2", className)}>
+    <Card className={cn("w-fit bg-white/10 p-4 space-y-1", className)}>
       <div className="relative overflow-hidden rounded-xl h-44 md:h-52 aspect-square">
         <Image
           src={poster || DEFAULT_ALTER_IMAGE}
@@ -41,7 +39,7 @@ export function ImageCard({
         Index Fund: {indexFund}
       </Badge>
       <CardTitle className="text-white text-[14px]">
-        {"Aditya Birla LGBTQ Memetic Superficial Ultra Giga Fund"}
+        {title}
       </CardTitle>
       {descriptionView && (
         <CardDescription className="line-clamp-2 max-w-52">

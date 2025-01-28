@@ -1,16 +1,21 @@
 import React from "react";
-import { ImageCard } from "./card/image-card";
+import { ImageCard } from "@/components/molecules/card/image-card";
 import { DaoData } from "@/validation/dao.validation";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export function DaoCard(dao: DaoData) {
+export function DaoCard({ ...dao }: DaoData) {
   const { id } = dao;
   return (
-    <ImageCard {...dao} descriptionView>
-      <Link href={`/funds/${id}`}>
-        <Button className="w-full mt-2 font-semibold">Check This Fund</Button>
-      </Link>
-    </ImageCard>
+    <>
+      <ImageCard
+        {...dao}
+        descriptionView
+      >
+        <Link href={`/funds/${id}`}>
+          <Button className="w-full mt-2 font-semibold">Check This Fund</Button>
+        </Link>
+      </ImageCard>
+    </>
   );
 }

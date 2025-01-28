@@ -47,6 +47,7 @@ const Chats = ({ daoId }: { daoId: string }) => {
         daoId,
         comment: value,
         name: session.data?.user?.name,
+        // @ts-ignore 
         userId: session.data?.user?.id,
         image: session.data?.user?.image,
       });

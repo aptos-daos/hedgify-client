@@ -1,59 +1,113 @@
 "use client";
 
-import React, { useState } from "react";
-import { TransitionPanel } from "@/components/ui/transition-panel";
-import { Button } from "@/components/ui/button";
-import FundWidget from "./fund-widget";
-import CoinWidget from "./coin-widget";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { useTokenStore } from "@/store/token";
+import { default_token } from "@/constants/token";
+import SwapInput from "./SwapInput";
+import SwapIcon from "./coin-widget/SwapIcon";
 
 const SwapWidget = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const ITEMS = [
-    {
-      title: "Commit",
-      content: CoinWidget,
-    },
-    {
-      title: "Withdraw",
-      content: FundWidget,
-    },
+  const [loading, setLoading] = useState(false);
+  const { tokenList, balance, setBalance } = useTokenStore();
+  const predefinedAmounts = ["0.5", "1", "2", "5"];
+  const values = [
+    { label: "Price Impact", value: "1.07%" },
+    { label: "Platform Fees", value: "0.001 APT" },
   ];
+  const [state, setState] = useState({
+    from: {
+      amount: 0,
+      active: default_token,
+      coins: [default_token],
+    },
+    to: {
+      amount: 0,
+      active: tokenList[0],
+      coins: tokenList,
+    },
+  });
+
+  const handleSwapButtonClick = () => {
+    setState({
+      from: state.to,
+      to: state.from,
+    });
+  };
+
+  const handleChangeAmount = (amount: string) => {
+    setState((prev) => ({
+      ...prev,
+      from: { ...prev.from, amount: Number(amount) },
+    }));
+  };
+
+  const handleInputChange = (value: number, key: "from" | "to") => {
+    setState((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], amount: value },
+    }));
+  };
+
+  const renderInput = (key: "from" | "to") => {
+    const { amount, coins, active } = state[key];
+    return (
+      <SwapInput
+        label={key}
+        value={amount}
+        coins={coins}
+        default_token={active}
+        onChange={(value) => handleInputChange(value, key)}
+      />
+    );
+  };
+
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="flex flex-row space-x-2 p-2">
-        {ITEMS.map((item, index) => (
-          <Button
-            variant="ghost"
-            className={cn(
-              "flex-1 rounded-none border-b-2",
-              activeIndex === index
-                ? "border-red-500 text-red-500"
-                : "border-transparent text-muted-foreground hover:text-current rounded-t"
-            )}
-            key={index}
-            onClick={() => setActiveIndex(index)}
-          >
-            {item.title}
-          </Button>
-        ))}
+    <Card>
+      <CardHeader className="flex-row justify-between gap-2 p-5">
+        <Button className="w-full">Buy</Button>
+        <Button className="w-full bg-red-400">Sell</Button>
       </CardHeader>
-      <CardContent className="overflow-hidden border-t border-zinc-200 dark:border-zinc-700">
-        <TransitionPanel
-          activeIndex={activeIndex}
-          transition={{ duration: 0.2, ease: "easeInOut" }}
-          variants={{
-            enter: { opacity: 0, y: -50, filter: "blur(4px)" },
-            center: { opacity: 1, y: 0, filter: "blur(0px)" },
-            exit: { opacity: 0, y: 50, filter: "blur(4px)" },
-          }}
-          className="p-4"
-        >
-          {ITEMS.map((item, index) => (
-            <item.content key={index} />
-          ))}
-        </TransitionPanel>
+      <CardContent className="space-y-4 p-5 pt-0">
+        <div className="space-y-5">
+          {/* Predefined Amounts */}
+          <div className="grid grid-cols-4 gap-2">
+            {predefinedAmounts.map((amount) => (
+              <Button
+                key={amount}
+                className="w-full bg-white hover:bg-muted cursor-pointer"
+                onClick={() => handleChangeAmount(amount)}
+              >
+                {`${amount} ${state.from.active.symbol}`}
+              </Button>
+            ))}
+          </div>
+
+          {renderInput("from")}
+          <SwapIcon onClick={handleSwapButtonClick} />
+          {renderInput("to")}
+
+          {/* Price Impact & Fees */}
+          <div className="space-y-2 text-sm">
+            {values.map((item, index) => (
+              <div key={index} className="flex justify-between text-muted">
+                <span>{item.label}:</span>
+                <span>{item.value}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Swap Button */}
+          <Button className="w-full bg-primary" disabled={loading}>
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "SWAP for the Sake of GOD"
+            )}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

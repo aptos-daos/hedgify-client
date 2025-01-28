@@ -14,7 +14,7 @@ interface RootProps extends Props {
 
 const Root: React.FC<RootProps> = ({ children, className, line = true, responsive = true }) => {
   return (
-    <div className={cn("relative flex w-full gap-4", className, responsive && "flex-col md:flex-row")}>
+    <div className={cn("relative flex w-full gap-3", className, responsive && "flex-col md:flex-row")}>
       {React.Children.map(children, (child, index) => {
         if (index === React.Children.count(children) - 1) return child;
         return (

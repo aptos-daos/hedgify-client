@@ -51,7 +51,7 @@ const CoinListCard = ({
               variant="ghost"
               size="icon"
               className={`${
-                isFavorited ? "text-yellow-400" : "text-zinc-400"
+                isFavorited ? "text-yellow-400" : "text-muted"
               } hover:text-white p-0`}
               onClick={handleFavoriteClick}
             >
@@ -77,11 +77,11 @@ const CoinListCard = ({
 
               <div className="flex flex-col">
                 <div className="flex items-center space-x-2">
-                  <span className="font-semibold">{token.symbol}</span>
+                  <span className="text-primary font-semibold">{token.symbol}</span>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-zinc-400 hover:text-white p-0 h-4 w-4"
+                    className="text-muted p-0 h-4 w-4"
                     onClick={handleCopyClick}
                   >
                     <Copy className="h-3 w-3" />
@@ -90,24 +90,24 @@ const CoinListCard = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-zinc-400 hover:text-white p-0 h-4 w-4"
+                      className="text-muted p-0 h-4 w-4"
                       onClick={handleExternalLinkClick}
                     >
                       <ExternalLink className="h-3 w-3" />
                     </Button>
                   )}
                   {token.panoraUI && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                   )}
                 </div>
-                <span className="text-sm text-zinc-400">{token.name}</span>
+                <span className="text-sm text-muted">{token.name}</span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col items-end">
-            <span className="font-medium">{token.panoraSymbol}</span>
-            <span className="text-sm text-zinc-400">~${formattedUsdPrice}</span>
+            <span className="text-muted font-medium">{token.panoraSymbol}</span>
+            <span className="text-sm text-muted">~${formattedUsdPrice}</span>
           </div>
         </div>
       </CardContent>

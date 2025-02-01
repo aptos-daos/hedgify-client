@@ -76,3 +76,38 @@ export async function getTokenList(): Promise<Token[]> {
 
   return data;
 }
+
+export async function getAllQuotes(
+  chainId: string,
+  amount: string,
+  fromToken: string,
+  toToken: string,
+  swapAmountSide: string = "FROM",
+  slippagePercentage: string = "auto"
+): Promise<SwapQuoteResponse> {
+  if(fromToken === toToken) {
+    new Error("fromToken and toToken must be different");
+  }
+  const query = {
+    chainId,
+    amount,
+    fromToken,
+    toToken,
+    swapAmountSide,
+    slippagePercentage,
+  };
+
+  const headers = {
+    "x-api-key": process.env.NEXT_PUBLIC_PANORA_API_KEY as string,
+  };
+
+  const queryString = new URLSearchParams(query).toString();
+  const url = `${PANORA_END_POINT}/swap/getAllQuotes?${queryString}`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: headers,
+  });
+
+  return response.json();
+}

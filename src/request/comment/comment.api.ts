@@ -62,20 +62,21 @@ export default class CommentAPI extends APIRequest {
    * @param commentId The ID of the comment
    */
   async toggleLikeComment(
+    daoId: string,
     commentId: string,
     userId: string
   ): Promise<{ message: string }> {
-    if (!commentId || !userId) {
-      throw new Error("Comment ID and User Id is required");
+    if (!daoId || !commentId || !userId) {
+      throw new Error("Dao Id, Comment ID and User Id is required");
     }
 
     const config = {
-      url: `dao/comments/${commentId}/like-toogle`,
+      url: `dao/comments/like-toogle/${commentId}`,
       method: "POST",
-      body: { userId },
+      body: { userId, daoId },
     };
 
-    console.log("Config", config)
+    console.log("LikeConfig", config);
 
     try {
       const response = await this.request<{ message: string }>(config);
@@ -90,7 +91,10 @@ export default class CommentAPI extends APIRequest {
    * Get likes for a comment
    * @param commentId The ID of the comment
    */
-  async getCommentLikes(commentId: string): Promise<LikeData[]> {
+  async getCommentLikes(
+    commentId: string,
+    userId: string
+  ): Promise<LikeData[]> {
     if (!commentId) {
       throw new Error("Comment ID is required");
     }
@@ -98,6 +102,7 @@ export default class CommentAPI extends APIRequest {
     const config = {
       url: `dao/comments/${commentId}/likes`,
       method: "GET",
+      body: { userId },
     };
 
     try {

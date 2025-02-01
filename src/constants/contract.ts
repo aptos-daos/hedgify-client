@@ -1,3 +1,5 @@
+import { updateAddress } from "@/utils/address";
+import { getSecondsTime } from "@/utils/formatters";
 import { DaoData } from "@/validation/dao.validation";
 import { type MoveStructId } from "@aptos-labs/ts-sdk";
 
@@ -53,13 +55,15 @@ export const TYPE_FUN_ARGUMENTS = {
     dao.title,
     dao.fundTicker,
     dao.description,
-    dao.daoCoinAddress, // TODO: UPDATE HERE
+    dao.poster,
     dao.website,
     dao.daoXHandle,
-    dao.daoCoinAddress, // TODO: UPDATE HERE
+    updateAddress("0xa"),
     dao.indexFund,
-    dao.fundingStarts,
+    getSecondsTime(dao.fundingStarts),
     dao.tradingPeriod,
+    "0x24022d815b6860a4da9b93bc3555b6b380cccf9182fe559b0ef824cbe64ddaa3", // UPDATE THIS,
+    100000,
     dao.profits,
   ],
 };

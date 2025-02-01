@@ -20,7 +20,6 @@ export const handleAddComment = async (
     const obj = {
       comment,
       daoId,
-      // @ts-ignore
       userId: user.id!,
       image: user.image!,
       name: user.name!,
@@ -36,9 +35,10 @@ export const handleAddComment = async (
   }
 };
 
-export const handleToggleLike = async (commentId: string): Promise<string> => {
-  // const session = await auth();
-  // const resp = await api.toggleLikeComment(commentId, session?.user?.id!);
-  //TODO: HANDLE LIKE
+export const handleToggleLike = async (daoId: string, commentId: string): Promise<string> => {
+  const session = await getSession();
+
+  const resp = await api.toggleLikeComment(daoId, commentId, session?.user?.id!);
+  // TODO: HANDLE LIKE
   return "";
 };

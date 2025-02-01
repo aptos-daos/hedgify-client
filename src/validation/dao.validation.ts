@@ -61,9 +61,11 @@ export const daoFormSchema = z.object({
 
   fundingStarts: dateSchema.optional().default(new Date()),
   tradingPeriod: z
-    .number()
-    .optional()
-    .nullable()
+    .union([
+      z.string()
+        .transform((val) => Number(val)),
+      z.number()
+    ])
     .refine((val) => !val || AVAILABLE_PERIOD_OF_TRADING.includes(val), {
       message: "Invalid trading period",
     }),

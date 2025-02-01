@@ -6,7 +6,6 @@ import { TwitterLogo } from "@phosphor-icons/react/dist/ssr";
 
 export default function TwitterAuthButton() {
   const { data: session } = useSession();
-  console.log(session);
 
   if (!session)
     return (

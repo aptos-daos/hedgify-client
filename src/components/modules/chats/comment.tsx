@@ -10,6 +10,7 @@ import { handleToggleLike } from "@/actions/comments";
 
 const Comment: React.FC<CommentType> = ({
   id,
+  daoId,
   comment,
   name,
   image,
@@ -17,7 +18,7 @@ const Comment: React.FC<CommentType> = ({
   createdAt,
 }) => {
   const handleLikeClick = async () => {
-    const resp = await handleToggleLike(id!);
+    const resp = await handleToggleLike(daoId, id!);
     console.log(resp);
   }
 

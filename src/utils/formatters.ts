@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format } from "date-fns";
 const formatNumber = (value: number): string => {
   return new Intl.NumberFormat("en-US").format(value);
 };
@@ -35,11 +35,30 @@ const getTicker = (str: string) => {
 
 const getLabel = (str: string) => {
   return str
-    .replace(/([A-Z])/g, ' $1') // Add space before capital letters
-    .trim() 
+    .replace(/([A-Z])/g, " $1") // Add space before capital letters
+    .trim()
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
+};
+
+const getSecondsTime = (val: unknown): number => {
+  if (typeof val === "string") {
+    const date = new Date(val);
+    return isNaN(date.getTime())
+      ? getSecondsTime(new Date())
+      : getSecondsTime(date);
+  }
+
+  if (typeof val === "number") {
+    return val > 1e12 ? val / 1000 : val;
+  }
+
+  if (val instanceof Date) {
+    return getSecondsTime(val.getTime());
+  }
+
+  return getSecondsTime(new Date()); // Default to current time if input is invalid
 };
 
 export {
@@ -49,4 +68,5 @@ export {
   getKebab,
   getTicker,
   getLabel,
+  getSecondsTime
 };

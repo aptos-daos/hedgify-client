@@ -34,20 +34,33 @@ const Chats = ({ daoId }: { daoId: string }) => {
     fetchComments();
   }, []);
 
+  useEffect(() => {
+    const fetchLikes = async () => {
+      const likes = await api.getCommentLikes(daoId, session.data?.user?.id!);
+      // const sorted = comments.sort(
+      //   (a, b) =>
+      //     new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+      // );
+      // setComments(sorted);
+    };
+
+    fetchLikes();
+  }, []);
+
   const handleClick = async () => {
     if (session.status === "unauthenticated") {
-      // TODO: show toast
+      toast({ title: "Please login to X/Twitter", variant: "destructive" });
+      return;
     }
 
     const id = await handleAddComment(value, daoId);
     if (id) {
-      console.log(id);
       const comment = commentSchema.parse({
         id,
         daoId,
         comment: value,
         name: session.data?.user?.name,
-        // @ts-ignore 
+        // @ts-ignore
         userId: session.data?.user?.id,
         image: session.data?.user?.image,
       });
@@ -59,7 +72,7 @@ const Chats = ({ daoId }: { daoId: string }) => {
   };
 
   return (
-    <div className="bg-white/10 p-4 rounded-md">
+    <div className="bg-white/10 p-4 rounded-xl">
       <div className="flex gap-2">
         <Input
           placeholder="Write a comment..."

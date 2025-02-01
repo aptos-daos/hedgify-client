@@ -1,5 +1,17 @@
 import { AuthOptions, getServerSession } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
+import "next-auth";
+
+declare module "next-auth" {
+  interface Session {
+    user?: {
+      id?: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
+  }
+}
 
 const authOptions: AuthOptions = {
   pages: {
@@ -12,7 +24,7 @@ const authOptions: AuthOptions = {
     TwitterProvider({
       clientId: process.env.AUTH_TWITTER_ID as string,
       clientSecret: process.env.AUTH_TWITTER_SECRET as string,
-      version: "2.0", 
+      version: "2.0",
     }),
   ],
   secret: process.env.AUTH_SECRET,
@@ -21,7 +33,6 @@ const authOptions: AuthOptions = {
       return true;
     },
     async session({ session, token }) {
-      console.log(session);
       if (session.user) {
         // @ts-ignore
         session.user.id = token.sub as string;
@@ -33,8 +44,8 @@ const authOptions: AuthOptions = {
         token.id = user.id;
       }
       return token;
-    }
-  }
+    },
+  },
 };
 
 /**

@@ -15,6 +15,8 @@ import { DaoFormData } from "@/validation/dao.validation";
 import { useContract } from "@/hooks/use-contract";
 import { useDao } from "@/hooks/use-dao";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { CSVRow } from "@/validation/csv.validation";
+import { toast } from "@/hooks/use-toast";
 
 export const inviteSchema = z.object({
   inviteCode: z.string().min(6, "Invite code must be at least 6 characters"),
@@ -23,6 +25,10 @@ export const inviteSchema = z.object({
 interface Props {
   inviteCode: string;
   children: React.ReactNode;
+}
+
+interface IData extends DaoFormData {
+  whitelist: CSVRow[];
 }
 
 const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
@@ -49,8 +55,18 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
     },
   });
 
-  const handleCreateDao = async (data: DaoFormData) => {
+  const handleCreateDao = async (data: IData) => {
+    console.log(data);
     const create_resp = await createDao(data, invite);
+    if(create_resp === null) {
+      toast({
+        title: "Error",
+        description: "Failed to create DAO",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // const contract_resp = await contract.createDao(create_resp);
 
     // TODO: implement: await daoApi.updateDAO()

@@ -11,24 +11,38 @@ import uploadFile from "@/utils/upload-file";
 import { type DaoFormData } from "@/validation/dao.validation";
 import { getKebab, getTicker } from "@/utils/formatters";
 import { FileUpload } from "@/components/ui/file-upload";
-import { AVAILABLE_FUND_OPTIONS } from "@/constants";
+import { AVAILABLE_FUND_OPTIONS, AVAILABLE_PERIOD_OF_TRADING } from "@/constants";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
+import { CSVRow, getWhitelistArray } from "@/utils/csv";
+
+interface IData extends DaoFormData {
+  whitelist: CSVRow[];
+}
 
 interface Props {
-  onSubmit: (data: DaoFormData) => void;
+  onSubmit: (data: IData) => void;
   address: string;
 }
 
 const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
   const { data: session } = useSession();
   const [file, setFile] = useState<File | null>(null);
+  const [whitelist, setWhitelist] = useState<CSVRow[]>([]);
 
   const handleFileUpload = async (file: File | null) => {
     if (!file) return;
     compressImage(file).then((compressedFile) => {
       setFile(compressedFile);
     });
+  };
+
+  const handleFileChange = async (files: File[]) => {
+    if(files.length === 0)
+      return;
+    const file = files[0];
+    const whtl = await getWhitelistArray(file);
+    setWhitelist(whtl);
   };
 
   const formik = useFormik<DaoFormData>({
@@ -46,6 +60,7 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       indexFund: 0,
       profits: 0,
       poster: "",
+      tradingPeriod: 0,
       walletAddress: address
     },
     validationSchema: toFormikValidationSchema(daoFormSchema),
@@ -59,10 +74,10 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
         return;
       }
       const url = await uploadFile(file);
-      onSubmit({ ...values, poster: url });
+      onSubmit({ ...values, poster: url, whitelist });
     },
   });
-  console.log(formik);
+  // console.log(formik);
 
   useEffect(() => {
     const checkSlug = debounce(async (slug: string) => {
@@ -146,8 +161,17 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
         placeholder="Enter the Profit share Fund Manager wants to keep"
         formik={formik}
       />
+      <FormSelect
+        name="tradingPeriod"
+        options={AVAILABLE_PERIOD_OF_TRADING.map((days) => ({
+          key: `${days}d`,
+          value: days,
+        }))}
+        placeholder="Select trading period duration"
+        formik={formik}
+      />
 
-      <FileUpload />
+      <FileUpload onChange={handleFileChange}/>
 
       <Button
         type="submit"

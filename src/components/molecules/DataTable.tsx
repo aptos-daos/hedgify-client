@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 export interface Column<T> {
   id: string;
@@ -29,7 +30,7 @@ const DataTable = <T extends { name: string }>({
         <TableHeader>
           <TableRow>
             {columns.map((column) => (
-              <TableHead key={column.id} className={column.className}>
+              <TableHead key={column.id} className={cn("select-none", column.className)}>
                 {column.header}
               </TableHead>
             ))}

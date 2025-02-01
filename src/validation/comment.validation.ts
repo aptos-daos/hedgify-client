@@ -9,6 +9,8 @@ const commentSchema = z.object({
   image: z.string().url("Invalid image URL"),
   daoId: z.string().min(1, "DAO Id is required"),
 
+  isLikes: z.boolean().default(false), // Only updates if user liked the page
+
   createdAt: z.date().optional()
 });
 

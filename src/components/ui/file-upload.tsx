@@ -90,10 +90,18 @@ export const FileUpload = ({
               />
             </motion.div>
             <div>
-              <motion.p layout className="text-base font-medium">
-                {title}
+              <motion.p 
+                layout 
+                className="text-base font-medium"
+                animate={{ opacity: isDragActive ? 0 : 1 }}
+              >
+                {isDragActive ? "" : title}
               </motion.p>
-              <motion.p layout className="text-sm text-muted mt-1">
+              <motion.p 
+                layout 
+                className="text-sm text-muted mt-1"
+                animate={{ opacity: 1 }}
+              >
                 {isDragActive ? "Drop to upload" : subtitle}
               </motion.p>
             </div>

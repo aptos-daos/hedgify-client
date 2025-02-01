@@ -18,7 +18,7 @@ interface Props {
 }
 
 const HoldingTable: React.FC<Props> = ({ fundId }) => {
-  // TODO: Implement Holdings API
+  // TODO: INDEXER: Implement Holdings API
   const columns: Column<Holding>[] = [
     {
       id: "name",

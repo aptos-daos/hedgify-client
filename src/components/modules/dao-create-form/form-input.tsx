@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import DatePicker from "@/components/molecules/DatePicker";
-import { getKebab, getLabel } from "@/utils/formatters";
+import { getLabel } from "@/utils/formatters";
 import {
   Select,
   SelectContent,
@@ -27,7 +27,7 @@ interface FormInputProps extends BaseFormProps {
 }
 
 interface FormSelectProps extends BaseFormProps {
-  options: {key: string, value: string}[];
+  options: {key: string, value: string | number}[];
 }
 
 const getFormFieldClassNames = (formik: any, name: string) => 
@@ -115,7 +115,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option.key} value={option.value}>
+          <SelectItem key={option.key} value={String(option.value)}>
             {option.value}
           </SelectItem>
         ))}

@@ -61,6 +61,7 @@ export function WalletSelector({
     signMessageAndVerify,
   } = useWallet();
   const userApi = new UserAPI();
+  const {address, setAddress} = useWalletStore();
 
   const { toast } = useToast();
 

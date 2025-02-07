@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import DataTable, { type Column } from "@/components/molecules/DataTable";
 import {
@@ -7,32 +9,38 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import getParticipantsIndexer from "@/request/graphql/get_participants";
+import { useQuery } from "@tanstack/react-query";
+import { type Participant } from "@/constants/queries/participants";
 
-interface Participant {
-  id: string;
-  amount: number;
-  walletAddress: string;
-}
+const ParticipantsTable = ({ daoAddress }: { daoAddress: string }) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["participants", daoAddress],
+    queryFn: () => getParticipantsIndexer(daoAddress),
+  });
 
-// TODO: IMAGEPLEMENT TABLE
-const ParticipantsTable = ({participants}: {participants: Participant[]}) => {
   const columns: Column<Participant>[] = [
     {
       id: "id",
       header: "ID",
-      cell: (row) => <span>{row.id}</span>,
+      cell: (row) => <span>{row.sequence_number}</span>,
     },
     {
-      id: "amount",
+      id: "amount_invested",
       header: "Amount",
-      cell: (row) => row.amount,
+      cell: (row) => row.amount_invested,
     },
     {
-      id: "walletAddress",
+      id: "participant_address",
       header: "Wallet Address",
-      cell: (row) => <span className="truncate">{row.walletAddress}</span>,
+      cell: (row) => (
+        <span className="truncate">{row.participant_address}</span>
+      ),
     },
   ];
+
+  if (isLoading || !data) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <Card>
@@ -41,7 +49,7 @@ const ParticipantsTable = ({participants}: {participants: Participant[]}) => {
         <CardDescription>List of all participants in the pool</CardDescription>
       </CardHeader>
       <CardContent>
-        <DataTable columns={columns} data={[]} />
+        <DataTable<Participant> columns={columns} data={data} />
       </CardContent>
     </Card>
   );

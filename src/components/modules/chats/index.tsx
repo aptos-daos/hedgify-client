@@ -13,6 +13,7 @@ import {
 import { handleAddComment } from "@/actions/comments";
 import CommentAPI from "@/request/comment/comment.api";
 import { toast } from "@/hooks/use-toast";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 const Chats = ({ daoId }: { daoId: string }) => {
   const api = new CommentAPI();
@@ -72,31 +73,36 @@ const Chats = ({ daoId }: { daoId: string }) => {
   };
 
   return (
-    <div className="bg-white/10 p-4 rounded-xl">
-      <div className="flex gap-2">
-        <Input
-          placeholder="Write a comment..."
-          className="flex-1"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleClick();
-            }
-          }}
-        />
-        <Button
-          className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
-          onClick={handleClick}
-        >
-          Post
-          <Send />
-        </Button>
-      </div>
-      {comments.map((comment, index) => (
-        <Comment key={comment.id} {...comment} />
-      ))}
-    </div>
+    <Card>
+      <CardHeader className="space-y-4">
+        <CardTitle className="text-white">Chats</CardTitle>
+        <div className="flex gap-2">
+          <Input
+            placeholder="Write a comment..."
+            className="flex-1"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleClick();
+              }
+            }}
+          />
+          <Button
+            className="bg-primary text-primary-foreground"
+            onClick={handleClick}
+          >
+            Post
+            <Send />
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="text-primary">
+        {comments.map((comment, index) => (
+          <Comment key={comment.id} {...comment} />
+        ))}
+      </CardContent>
+    </Card>
   );
 };
 

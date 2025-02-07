@@ -1,14 +1,18 @@
 import Chats from "@/components/modules/chats";
 import DaoMessage from "@/components/modules/dao-message";
 import PreviewDisplay from "@/components/modules/preview-display";
-import SwapWidget from "@/components/modules/swap-widget";
+import SwapWidget from "@/components/modules/swap-widgets/token-swap-widget";
 import { Separate } from "@/components/molecules/separate-layout";
 import { FUNDING_PERIOD, FUNDING_HOLD_PERIOD } from "@/constants";
 import DAOAPI from "@/request/dao/dao.api";
 import { notFound } from "next/navigation";
 import { addDays } from "date-fns";
-import MyDaoToken from "@/components/modules/my-dao-token";
+import Screener from "@/components/modules/screener";
+import DaoDetails from "@/components/modules/preview-display/DaoDetails";
 import ParticipantsTable from "@/components/modules/participants-table";
+import getDAODetailsIndexer from "@/request/graphql/get_daos";
+import { getTotalFunding } from "@/request/graphql/get_total_funding";
+import { getLiveStatus } from "@/utils/dao";
 
 export default async function Page({
   params,
@@ -19,6 +23,14 @@ export default async function Page({
   const api = new DAOAPI();
 
   const dao = await api.getSingleDAO(fundId);
+  const indexer_dao = await getDAODetailsIndexer(dao.treasuryAddress);
+  const totalFunding = await getTotalFunding(dao.treasuryAddress);
+  const dao_status = getLiveStatus({
+    ...dao,
+    totalFunding,
+    tradingStarts: new Date(indexer_dao.trading_start_time * 1000),
+    tradingEnds: new Date(indexer_dao.trading_end_time * 1000),
+  });
 
   if (!dao) {
     return notFound();
@@ -27,22 +39,22 @@ export default async function Page({
   return (
     <main>
       <DaoMessage
+        status={dao_status}
+        tradingEnds={new Date(indexer_dao.trading_end_time * 1000)}
         {...dao}
-        tradingStarts={addDays(
-          dao.fundingStarts,
-          FUNDING_PERIOD + FUNDING_HOLD_PERIOD
-        )}
       />
 
       <Separate.Root>
         <Separate.Layout>
-          <PreviewDisplay {...dao} />
-          <ParticipantsTable participants={[]}/>
+          <PreviewDisplay status={dao_status} {...dao} />
+          <DaoDetails {...dao} />
+          {/* <ParticipantsTable daoAddress={dao.treasuryAddress} /> */}
         </Separate.Layout>
 
         <Separate.Layout>
-          <SwapWidget />
-          <MyDaoToken {...dao} tradingEnds="" />
+          <SwapWidget {...dao} />
+          <Screener />
+          {/* <MyDaoToken {...dao} tradingEnds="" /> */}
         </Separate.Layout>
       </Separate.Root>
       <Chats daoId={dao.id} />

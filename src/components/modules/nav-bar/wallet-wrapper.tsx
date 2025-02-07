@@ -4,8 +4,6 @@ import React from "react";
 import { WalletSelector } from "@/components/WalletSelector";
 import { usePathname } from "next/navigation";
 import { SECURED_PATHS } from "@/constants";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 interface Props {
   children: React.ReactNode;

@@ -1,33 +1,41 @@
-import { gql } from "@apollo/client";
-import client from "@/lib/graphql";
-
-const query = gql`
-  query CoinBalances($address: String!) {
-    current_coin_balances(where: { owner_address: { _eq: $address } }) {
-      amount
-      coin_type
-      coin_type_hash
-      last_transaction_timestamp
-    }
-  }
-`;
+import { aptosClient } from "@/lib/graphql";
+import {
+  GET_FUNGIBLE_ASSET_BALANCE,
+  GET_TOKEN_BALANCE,
+  type FungibleAssetResponse
+} from "@/request/graphql/get_token_assets";
 
 export const fetchBalance = async (address: string, coinType: any) => {
   try {
-    const { data } = await client.query({
-      query,
+    const { data } = await aptosClient.query({
+      query: GET_TOKEN_BALANCE,
       variables: {
         address,
       },
     });
-    
+
     const balance = data.current_coin_balances.find(
       (balance: any) => balance.coin_type === coinType
     );
-    
-    return isNaN(balance?.amount) ? 0 : balance?.amount/1e8;
+
+    return isNaN(balance?.amount) ? 0 : balance?.amount / 1e8;
   } catch (error) {
-    console.error('Error fetching balance:', error);
+    console.error("Error fetching balance:", error);
+    return 0;
+  }
+};
+
+export const fetchFungibleAsset = async (daoAddress: string) => {
+  try {
+    const { data } = await aptosClient.query<FungibleAssetResponse>({
+      query: GET_FUNGIBLE_ASSET_BALANCE,
+      variables: {
+        daoAddress,
+      },
+    });
+    return data.current_fungible_asset_balances;
+  } catch (error) {
+    console.error("Error fetching balance:", error);
     return 0;
   }
 };

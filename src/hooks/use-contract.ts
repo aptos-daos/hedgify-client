@@ -10,6 +10,10 @@ import {
   TYPE_FUN_ARGUMENTS,
 } from "@/constants/contract";
 
+interface IDaoData extends DaoData {
+  merkle?: { root: string; proof: string; limit: string };
+}
+
 const useContract = () => {
   const { toast } = useToast();
   const { signAndSubmitTransaction, connected } = useWallet();
@@ -54,16 +58,61 @@ const useContract = () => {
     }
   };
 
-  const createDao = async (dao: DaoData) => {
-    const _key = "CREATE_DA0";
-    return await executeTransaction(
+  const createDao = async (dao: IDaoData) => {
+    const _key = "CREATE_DAO";
+    return (await executeTransaction(
       RESOURCES[_key],
       TYPE_ARGUMENTS[_key],
       TYPE_FUN_ARGUMENTS[_key](dao)
-    );
+    )) as TransactionData;
   };
 
-  return { createDao };
+  const joinDaoVip = async (dao: IDaoData, amount: number) => {
+    const _key = "JOIN_VIP";
+
+    return (await executeTransaction(
+      RESOURCES[_key],
+      TYPE_ARGUMENTS[_key],
+      TYPE_FUN_ARGUMENTS[_key](dao, amount)
+    )) as TransactionData;
+  };
+
+  const joinDaoPublic = async (
+    dao: IDaoData,
+    amount: number,
+    signature: string,
+    expire_time_in_seconds: string
+  ) => {
+    const _key = "JOIN_PUBLIC";
+
+    return (await executeTransaction(
+      RESOURCES[_key],
+      TYPE_ARGUMENTS[_key],
+      TYPE_FUN_ARGUMENTS[_key](dao, amount, signature, expire_time_in_seconds)
+    )) as TransactionData;
+  };
+
+  const startTrading = async (dao: IDaoData) => {
+    const _key = "START_TRADING";
+
+    return (await executeTransaction(
+      RESOURCES[_key],
+      TYPE_ARGUMENTS[_key],
+      TYPE_FUN_ARGUMENTS[_key](dao)
+    )) as TransactionData;
+  };
+
+  const endWhitelist = async (dao: IDaoData) => {
+    const _key = "END_WHITELIST";
+
+    return (await executeTransaction(
+      RESOURCES[_key],
+      TYPE_ARGUMENTS[_key],
+      TYPE_FUN_ARGUMENTS[_key](dao)
+    )) as TransactionData;
+  };
+
+  return { createDao, joinDaoPublic, joinDaoVip, startTrading, endWhitelist };
 };
 
 export { useContract };

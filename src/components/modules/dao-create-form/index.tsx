@@ -32,10 +32,10 @@ interface IData extends DaoFormData {
 }
 
 const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
-  const {account} = useWallet();
+  const { account, connected } = useWallet();
   const { status } = useSession();
   const inviteApi = new InviteAPI();
-  const { createDao } = useDao();
+  const { createDao, updateDaoValue } = useDao();
   const contract = useContract();
 
   const [scope, animate] = useAnimate();
@@ -56,29 +56,73 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
   });
 
   const handleCreateDao = async (data: IData) => {
-    console.log(data);
     const create_resp = await createDao(data, invite);
-    if(create_resp === null) {
+    if (create_resp === null) {
       toast({
-        title: "Error",
-        description: "Failed to create DAO",
+        title: "Failed to create DAO, ",
+        description: "No response found",
         variant: "destructive",
       });
       return;
     }
 
-    // const contract_resp = await contract.createDao(create_resp);
+    // @ts-ignore
+    const contract_resp = await contract.createDao(create_resp);
 
-    // TODO: implement: await daoApi.updateDAO()
+    if (!contract_resp) {
+      toast({
+        title: "Failed to create DAO",
+        description: "Transaction failed",
+        variant: "destructive",
+      });
+      return;
+    }
+    const daoCreationEvent = contract_resp.events.find((event) =>
+      event.type.includes("DaoCreationEvent")
+    );
+
+    if (!daoCreationEvent) {
+      toast({
+        title: "Failed to create DAO",
+        description: "Creation event not found",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { dao_coin, dao_object_address } = daoCreationEvent.data;
+
+    if (!dao_coin || !dao_object_address) {
+      toast({
+        title: "Failed to create DAO",
+        description: "Missing DAO addresses in event",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const dao = await updateDaoValue(create_resp.id, {
+      treasuryAddress: dao_coin.inner,
+      daoCoinAddress: dao_object_address,
+    });
+
+    if (!dao) {
+      toast({
+        title: "Failed to create DAO",
+        description: "Something Went Wrong",
+        variant: "destructive",
+      });
+      return;
+    }
   };
 
   return (
     <>
       <div
-        className={"flex-1 min-w-max space-y-2 md:space-y-4 mt-10"}
+        className={"flex-1 space-y-2 md:space-y-4 mt-10 min-w-96"}
         ref={scope}
       >
-        <Card className="w-full min-w-96 mx-auto p-6 pace-y-6">
+        <Card className="w-full mx-auto p-6 pace-y-6">
           <form onSubmit={formik.handleSubmit} className="space-y-4">
             <FormInput
               name="inviteCode"
@@ -91,9 +135,11 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
               <Button
                 type="submit"
                 className="w-full font-semibold"
-                disabled={status !== "authenticated"}
+                disabled={status !== "authenticated" || !connected}
               >
-                {status === "authenticated"
+                {!connected
+                  ? "Please Connect Your Wallet"
+                  : status === "authenticated"
                   ? "Check Eligibility"
                   : "Please Sign in With Twitter"}
               </Button>
@@ -113,7 +159,10 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
                   Create Your Hedge Fund DAO
                 </h2>
 
-                <DAOForm onSubmit={handleCreateDao} address={account?.address!} />
+                <DAOForm
+                  onSubmit={handleCreateDao}
+                  address={account?.address!}
+                />
               </Card>
             </motion.div>
           )}

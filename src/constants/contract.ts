@@ -1,13 +1,29 @@
 import { updateAddress } from "@/utils/address";
 import { getSecondsTime } from "@/utils/formatters";
+import { CSVRow } from "@/validation/csv.validation";
 import { DaoData } from "@/validation/dao.validation";
 import { type MoveStructId } from "@aptos-labs/ts-sdk";
+
+interface IData extends DaoData {
+  merkle?: { root: string; proof: string; limit: string };
+}
 
 const MODULE_ADDRESS = process.env.NEXT_PUBLIC_MODULE_ADDRESS as string;
 const MODULE_NAME = "daos";
 
+/*
+struct JoinDaoSignature has drop {
+        /// Dao address
+        dao_address: vector<u8>,
+        /// Joinee address
+        joinee_address: vector<u8>,
+        /// Expiration time of the signature
+        expire_time_in_seconds: u64,
+    }
+*/
+
 const functions = [
-  "CREATE_DA0",
+  "CREATE_DAO",
   "START_TREADING",
   "JOIN_VIP",
   "JOIN_PUBLIC",
@@ -16,6 +32,7 @@ const functions = [
   "SET_WITHDRAWABLE",
   "WITHDRAW_COMPLETION",
   "CREATE_STORE",
+  "END_WHITELIST",
 ];
 
 type IResources = {
@@ -27,7 +44,7 @@ type IArguments = {
 };
 
 export const RESOURCES: IResources = {
-  CREATE_DA0: `${MODULE_ADDRESS}::${MODULE_NAME}::create_dao`,
+  CREATE_DAO: `${MODULE_ADDRESS}::${MODULE_NAME}::create_dao`,
   START_TREADING: `${MODULE_ADDRESS}::${MODULE_NAME}::start_trading`,
   JOIN_VIP: `${MODULE_ADDRESS}::${MODULE_NAME}::join_dao_vip`,
   JOIN_PUBLIC: `${MODULE_ADDRESS}::${MODULE_NAME}::join_dao_public`,
@@ -36,10 +53,11 @@ export const RESOURCES: IResources = {
   SET_WITHDRAWABLE: `${MODULE_ADDRESS}::${MODULE_NAME}::set_is_withdrawable`,
   WITHDRAW_COMPLETION: `${MODULE_ADDRESS}::${MODULE_NAME}::withdraw_dao_completion`,
   CREATE_STORE: `${MODULE_ADDRESS}::${MODULE_NAME}::create_store`,
+  END_WHITELIST: `${MODULE_ADDRESS}::${MODULE_NAME}::end_whitelist`,
 };
 
 export const TYPE_ARGUMENTS: IArguments = {
-  CREATE_DA0: [],
+  CREATE_DAO: [],
   START_TREADING: [],
   JOIN_VIP: [], // TODO: add type arguments
   JOIN_PUBLIC: [], // TODO: add type arguments
@@ -48,22 +66,37 @@ export const TYPE_ARGUMENTS: IArguments = {
   SET_WITHDRAWABLE: [], // TODO: add type arguments
   WITHDRAW_COMPLETION: [], // TODO: add type arguments
   CREATE_STORE: [],
+  END_WHITELIST: [],
 };
 
 export const TYPE_FUN_ARGUMENTS = {
-  CREATE_DA0: (dao: DaoData) => [
+  CREATE_DAO: (dao: IData) => [
     dao.title,
     dao.fundTicker,
     dao.description,
     dao.poster,
     dao.website,
     dao.daoXHandle,
-    updateAddress("0xa"),
+    updateAddress("a"),
     dao.indexFund,
     getSecondsTime(dao.fundingStarts),
-    dao.tradingPeriod,
-    "0x24022d815b6860a4da9b93bc3555b6b380cccf9182fe559b0ef824cbe64ddaa3", // UPDATE THIS,
+    dao.tradingPeriod * 24 * 60 * 60, // IN SECONDS
+    dao.merkle?.root || [],
     100000,
     dao.profits,
   ],
+  JOIN_VIP: (dao: IData, amount: number) => [
+    dao.treasuryAddress,
+    amount,
+    dao.merkle?.proof || [],
+    dao.merkle?.limit || 0,
+  ],
+  JOIN_PUBLIC: (
+    dao: IData,
+    amount: number,
+    sign: string,
+    sign_exp_time: string
+  ) => [dao.treasuryAddress, amount, sign, sign_exp_time],
+  START_TRADING: (dao: IData) => [dao.treasuryAddress],
+  END_WHITELIST: (dao: IData) => [dao.treasuryAddress],
 };

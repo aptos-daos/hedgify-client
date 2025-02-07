@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import {
   useWallet,
   WalletSortingOptions,
@@ -18,7 +18,6 @@ import {
   LogOut,
   User,
 } from "lucide-react";
-import { useWalletStore } from "@/store/wallet";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -40,7 +39,6 @@ import {
   WalletRowItemProps,
 } from "./wallet.d";
 import { useToast } from "@/hooks/use-toast";
-import UserAPI from "@/request/auth/user.api";
 
 interface Props extends WalletSortingOptions {
   secure?: boolean;
@@ -50,69 +48,9 @@ export function WalletSelector({
   secure = false,
   ...walletSortingOptions
 }: Props) {
-  const prevConnectedRef = useRef<boolean | null>(null);
-  const prevAddressRef = useRef<string | null | undefined>(null);
-  const {
-    account,
-    connected,
-    disconnect,
-    wallet,
-    signMessage,
-    signMessageAndVerify,
-  } = useWallet();
-  const userApi = new UserAPI();
-  const {address, setAddress} = useWalletStore();
+  const { account, connected, disconnect, wallet } = useWallet();
 
   const { toast } = useToast();
-
-  useEffect(() => {
-    const handleLogin = async () => {
-      if (
-        secure &&
-        connected &&
-        account?.address &&
-        (prevConnectedRef.current !== connected ||
-          prevAddressRef.current !== account.address)
-      ) {
-        try {
-          // Request a message to sign
-          const { message, nonce } = await userApi.requestMessage(
-            account?.address
-          );
-
-          // Ask the user to sign the message
-          const response = await signMessage({ message, nonce });
-          console.log(response);
-
-          if (
-            account.publicKey &&
-            response.fullMessage &&
-            response.signature &&
-            typeof response.signature === "string"
-            && typeof account.publicKey === "string"
-          ) {
-            // Call the login API after a successful signature
-            // TODO: check params
-            await userApi.login(
-              account.address,
-              account.publicKey,
-              response.fullMessage,
-              response.signature as string
-            );
-          } else {
-            console.error("Failed to retrieve full message or signature.");
-          }
-        } catch (error) {
-          console.error("Error during login process:", error);
-        }
-      }
-
-      prevConnectedRef.current = connected;
-      prevAddressRef.current = account?.address;
-    };
-
-    handleLogin();
-  }, [secure, connected, account, signMessage]);
 
   const copyAddress = useCallback(async () => {
     if (!account?.address) return;
@@ -191,7 +129,7 @@ function ConnectWalletDialog({
       <DialogTrigger asChild>
         <Button className="rounded-lg w-full">Connect a Wallet</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-screen overflow-auto w-[360px] p-6">
+      <DialogContent className="max-h-screen overflow-auto w-96 p-6">
         <DialogTitle hidden></DialogTitle>
         {!moreView ? (
           <MainWalletView
@@ -222,27 +160,17 @@ function MainWalletView({
   return (
     <>
       <DialogHeader className="pt-2">
-        {/* <div className="flex justify-center">
-          <WalletLogo />
-        </div> */}
         <DialogTitle className="flex flex-col text-center leading-snug font-semibold mt-4">
           Connect to DAOs
         </DialogTitle>
       </DialogHeader>
 
-      {hasAptosConnectWallets && (
-        <div className="flex flex-col gap-2">
-          {aptosConnectWallets.map((wallet) => (
-            <WalletRowItem key={wallet.name} wallet={wallet} isAptosConnect />
-          ))}
-          <div className="flex items-center gap-3 pt-[52px]">
-            <div className="h-px w-full bg-grey" /> Or{" "}
-            <div className="h-px w-full bg-grey" />
-          </div>
-        </div>
-      )}
+      {hasAptosConnectWallets &&
+        aptosConnectWallets.map((wallet) => (
+          <WalletRowItem key={wallet.name} wallet={wallet} isAptosConnect />
+        ))}
 
-      <div className="flex flex-col gap-3 pt-4">
+      <div className="flex flex-col gap-3">
         {availableWallets.map((wallet) => (
           <WalletRowItem key={wallet.name} wallet={wallet} />
         ))}
@@ -320,7 +248,7 @@ function WalletRowItem({ wallet, isAptosConnect = false }: WalletRowItemProps) {
       <WalletItem.ConnectButton asChild>
         <Button
           variant="outline"
-          className={`w-full flex items-center p-3 space-x-3 ${
+          className={`bg-white/10 hover:bg-white/20 transition-colors py-7 px-4 rounded-2xl border-0 w-full flex items-center space-x-3 ${
             isAptosConnect ? "justify-between" : "justify-start"
           }`}
         >

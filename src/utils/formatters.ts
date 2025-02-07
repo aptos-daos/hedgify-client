@@ -1,4 +1,5 @@
-import { format } from "date-fns";
+import { intervalToDuration } from 'date-fns';
+
 const formatNumber = (value: number): string => {
   return new Intl.NumberFormat("en-US").format(value);
 };
@@ -51,7 +52,7 @@ const getSecondsTime = (val: unknown): number => {
   }
 
   if (typeof val === "number") {
-    return val > 1e12 ? val / 1000 : val;
+    return Math.floor(val > 1e12 ? val / 1000 : val);
   }
 
   if (val instanceof Date) {
@@ -61,6 +62,42 @@ const getSecondsTime = (val: unknown): number => {
   return getSecondsTime(new Date()); // Default to current time if input is invalid
 };
 
+const formatAddress = (address: string): string => {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};
+
+/**
+ * @param futureDate - The future date to calculate time difference to
+ * @returns Formatted time difference string
+ */
+function getStartsInFormat(futureDate: Date): string {
+  const now = new Date();
+  
+  // Calculate the duration between now and the future date
+  const duration = intervalToDuration({
+    start: now,
+    end: futureDate
+  });
+  
+  // Extract all time units with fallback to 0
+  const months = duration.months ?? 0;
+  const days = duration.days ?? 0;
+  const hours = duration.hours ?? 0;
+  const minutes = duration.minutes ?? 0;
+  const seconds = duration.seconds ?? 0;
+  
+  // Build the string parts conditionally
+  const parts: string[] = [];
+  if (months > 0) parts.push(`${months} month${months !== 1 ? 's' : ''}`);
+  if (days > 0) parts.push(`${days} day${days !== 1 ? 's' : ''}`);
+  if (hours > 0) parts.push(`${hours} hr`);
+  if (minutes > 0) parts.push(`${minutes} min`);
+  if (seconds > 0) parts.push(`${seconds} sec`);
+  
+  return parts.join(' ') || '0 sec';
+}
+
+
 export {
   formatNumber,
   formatCurrency,
@@ -68,5 +105,7 @@ export {
   getKebab,
   getTicker,
   getLabel,
-  getSecondsTime
+  getSecondsTime,
+  formatAddress,
+  getStartsInFormat
 };

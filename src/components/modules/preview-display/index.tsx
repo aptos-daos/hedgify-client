@@ -2,12 +2,16 @@ import React from "react";
 import { DaoData } from "@/validation/dao.validation";
 import { ImageCard } from "@/components/molecules/card/image-card";
 import LiveView from "./LiveView";
-import DaoDetails from "./DaoDetails";
 import { Separate } from "@/components/molecules/separate-layout";
 import { AnimatedSocialTooltip } from "@/components/ui/animated-social-tooltip";
 import { XLogo, TelegramLogo, Planet } from "@phosphor-icons/react/dist/ssr";
+import { DaoStatus } from "@/constants";
 
-const PreviewDisplay: React.FC<DaoData> = (dao) => {
+interface Props extends DaoData{
+  status: DaoStatus
+}
+
+const PreviewDisplay: React.FC<Props> = ({status, ...dao}) => {
   const iconSize = 16;
   const data = [
     {
@@ -26,22 +30,18 @@ const PreviewDisplay: React.FC<DaoData> = (dao) => {
       value: dao.telegramGroup ?? dao.telegramHandle,
     },
   ].filter((item) => typeof item.value === "string");
-  return (
-    <div className="space-y-2">
-      <Separate.Root className="flex gap-2" line={false} responsive={false}>
-        <Separate.Layout>
-          <ImageCard {...dao} className="h-full">
-            <AnimatedSocialTooltip items={data} />
-          </ImageCard>
-        </Separate.Layout>
-        <Separate.Layout>
-          <LiveView />
-        </Separate.Layout>
-      </Separate.Root>
 
-      {/* TODO: Implement Trading Starts At from Indexer */}
-      <DaoDetails {...dao} />
-    </div>
+  return (
+    <Separate.Root className="flex gap-2" line={false} responsive={false}>
+      <Separate.Layout>
+        <ImageCard {...dao} className="h-full">
+          <AnimatedSocialTooltip items={data} />
+        </ImageCard>
+      </Separate.Layout>
+      <Separate.Layout>
+        <LiveView status={status} {...dao} />
+      </Separate.Layout>
+    </Separate.Root>
   );
 };
 

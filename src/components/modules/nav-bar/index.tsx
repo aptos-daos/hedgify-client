@@ -3,12 +3,14 @@ import { PlusSquare } from "lucide-react";
 import Link from "next/link";
 import TwitterLoginButton from "../dao-create-form/twitter-auth";
 import Wallet from "./wallet-wrapper";
+import DashboardButton from "./dashboard-button";
 
 const NavBar = () => {
   return (
     <>
       <nav className="z-50 flex items-center justify-end gap-2 p-2 md:p-4 sticky top-0 bg-background/50 backdrop-blur-lg border-b">
         <div className="flex items-center gap-2">
+          {/* <DashboardButton /> TODO: HYDRATION ERROR*/}
           <TwitterLoginButton />
           <Wallet>
             <Link href="/create-dao" className="hidden md:block">

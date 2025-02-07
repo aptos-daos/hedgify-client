@@ -1,29 +1,18 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { DaoData } from "@/validation/dao.validation";
 import { DAO_TOP_MESSAGE } from "@/constants";
-import { getLiveStatus } from "@/utils/dao";
 import { DaoStatus } from "@/constants";
+import { getStartsInFormat } from "@/utils/formatters";
 
 interface Props extends DaoData {
-  tradingStarts: Date;
-  totalFunding?: number;
+  status: DaoStatus;
+  tradingEnds: Date;
 }
 
-const DaoMessage = ({
-  indexFund,
-  fundingStarts,
-  tradingPeriod,
-  tradingStarts,
-  totalFunding = indexFund,
-}: Props) => {
-  const status = getLiveStatus({
-    indexFund,
-    fundingStarts,
-    tradingPeriod,
-    tradingStarts,
-    totalFunding,
-  } as any);
-
+const DaoMessage = ({ status, tradingEnds }: Props) => {
+  const [timestr, setTimestr] = useState("");
   const messages = {
     [DaoStatus.NOT_STARTED]: DAO_TOP_MESSAGE.NOT_STARTED,
     [DaoStatus.TRADING_NOT_STARTED]: DAO_TOP_MESSAGE.TRADING_NOT_STARTED,
@@ -32,9 +21,17 @@ const DaoMessage = ({
     [DaoStatus.TRADING_LIVE]: DAO_TOP_MESSAGE.LIVE,
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimestr(getStartsInFormat(tradingEnds));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="w-full p-1.5 px-3 text-xs bg-white/5 border border-primary/80 rounded-lg text-center">
-      {messages[status]}
+      {messages[status](timestr)}
     </div>
   );
 };

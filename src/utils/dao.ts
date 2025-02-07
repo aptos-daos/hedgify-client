@@ -4,23 +4,29 @@ import { DaoStatus } from "@/constants";
 
 interface Dao extends DaoData {
   tradingStarts: Date;
+  tradingEnds: Date;
   totalFunding: number;
 }
 
 export const getLiveStatus = (dao: Dao): DaoStatus => {
   const now = new Date();
-  const tradingEnds = addDays(dao.tradingStarts, dao.tradingPeriod);
+  
   if (dao.fundingStarts > now) {
+    console.log('DAO status: Not Started');
     return DaoStatus.NOT_STARTED;
   }
+  if (dao.tradingEnds > now) {
+    console.log('DAO status: Funding Live');
+    return DaoStatus.FUNDING_LIVE;
+  }
   if (dao.tradingStarts > now && dao.indexFund <= dao.totalFunding) {
+    console.log('DAO status: Trading Not Started');
     return DaoStatus.TRADING_NOT_STARTED;
   }
   if (dao.indexFund > dao.totalFunding) {
+    console.log('DAO status: Not Successful');
     return DaoStatus.NOT_SUCCESSFUL;
   }
-  if (tradingEnds > now) {
-    return DaoStatus.FUNDING_LIVE;
-  }
+  console.log('DAO status: Trading Live');
   return DaoStatus.TRADING_LIVE;
 };

@@ -1,20 +1,27 @@
 "use client";
 
 import ValueCard from "@/components/molecules/card/value-card";
+import { DaoStatus } from "@/constants";
+import { useLive } from "@/hooks/use-live";
+import { DaoData } from "@/validation/dao.validation";
 import React from "react";
 
-const LiveView = () => {
-  // TODO: will fetch live data
-  const items = {
-    "Market Capital": "$218291321",
-    AUM: "$218291321",
-    Parterners: "86",
-    Return: "+86",
-  };
+interface Props extends DaoData {
+  status: DaoStatus;
+}
+
+const LiveView: React.FC<Props> = ({ status, ...dao }) => {
+  const { liveData } = useLive(dao, status);
+
   return (
     <div className="space-y-2">
-      {Object.entries(items).map(([key, value]) => (
-        <ValueCard key={key} heading={key} value={value} />
+      {liveData.map((item, index) => (
+        <ValueCard
+          key={index}
+          heading={item.key}
+          value={item.value}
+          type={item.type}
+        />
       ))}
     </div>
   );

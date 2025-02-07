@@ -29,7 +29,7 @@ const useDao = (ifetch = false) => {
 
   const { toast } = useToast();
 
-  const fetchAllDaoData = async (): Promise<DaoData[]> => {
+  const fetchAllDaoData = async (walletAddress?: string): Promise<DaoData[]> => {
     try {
       const response = await api.getAllDAOs();
       return response;
@@ -62,8 +62,7 @@ const useDao = (ifetch = false) => {
     try {
       // TODO: handle type
       // @ts-ignore
-      const response = await api.createDAO({inviteCode, ...data});
-      return response;
+      return await api.createDAO({inviteCode, ...data});
     } catch (error) {
       toast({
         title: "Failed to add dao",

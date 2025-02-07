@@ -1,12 +1,10 @@
 import React from "react";
 import Image from "next/image";
-import { ThumbsUp } from "lucide-react";
+import { ThumbsUp, MessageCircle } from "lucide-react";
 import type { Comment as CommentType } from "@/validation/comment.validation";
 import { formatDistanceToNow } from "date-fns";
 import CommentAPI from "@/request/comment/comment.api";
 import { handleToggleLike } from "@/actions/comments";
-
-// interface Props extends CommentType {}
 
 const Comment: React.FC<CommentType> = ({
   id,
@@ -23,31 +21,40 @@ const Comment: React.FC<CommentType> = ({
   }
 
   return (
-    <div className="flex items-start space-x-4 p-4">
+    <div className="group relative flex items-start space-x-4 rounded-lg p-4 transition-all">
       <div className="shrink-0">
         <Image
           src={image}
           alt={`${name}'s avatar`}
           width={40}
           height={40}
-          className="rounded-full"
+          className="rounded-full border-2 border-primary/20 transition-all"
         />
       </div>
       <div className="grow">
-        <div className="flex items-center space-x-2">
-          <h4 className="font-semibold">{name}</h4>
-          {createdAt && (
-            <span className="text-xs text-muted">
-              {formatDistanceToNow(createdAt)}
-            </span>
-          )}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <h4 className="font-semibold text-primary">{name}</h4>
+            {createdAt && (
+              <span className="text-xs text-muted-foreground">
+                {formatDistanceToNow(createdAt)}
+              </span>
+            )}
+          </div>
         </div>
-        <p className="mt-1 text-sm text-muted">{comment}</p>
-        <div className="mt-2 flex items-center justify-between">
-          <button className="flex items-center text-gray-500 hover:text-blue-500" onClick={handleLikeClick}>
-            <ThumbsUp />
-            <span className="ml-1">{likes}</span>
+        <p className="mt-2 text-sm text-muted-foreground">{comment}</p>
+        <div className="mt-3 flex items-center space-x-4">
+          <button 
+            className="flex items-center space-x-1.5 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary transition-colors hover:bg-primary/20" 
+            onClick={handleLikeClick}
+          >
+            <ThumbsUp size={14} />
+            <span>{likes}</span>
           </button>
+          {/* <button className="flex items-center space-x-1.5 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary transition-colors hover:bg-primary/20">
+            <MessageCircle size={14} />
+            <span>Reply</span>
+          </button> */}
         </div>
       </div>
     </div>

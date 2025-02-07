@@ -25,6 +25,12 @@ interface Token {
   isBanned: boolean;
 }
 
+interface SwapObject {
+  amount: number;
+  active: Token;
+  coins: Token[];
+}
+
 interface SwapQuoteResponse {
   fromToken: {
     address: string;
@@ -56,10 +62,3 @@ interface Invite {
   user: string;
   expiresAt: string;
 }
-
-interface Participant {
-  id: string;
-  amount: string;
-  walletAddress: string;
-}
-

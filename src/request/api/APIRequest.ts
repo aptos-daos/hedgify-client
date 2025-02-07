@@ -45,7 +45,10 @@ export default class APIRequest {
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.data) {
-          if ("success" in error.response.data) {
+          if (
+            typeof error.response.data === "object" &&
+            Reflect.has(error.response.data, "success")
+          ) {
             return error.response.data.data as T;
           }
           return error.response.data as T;

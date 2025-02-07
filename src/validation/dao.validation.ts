@@ -16,7 +16,7 @@ const dateSchema = z
   });
 
 export const daoFormSchema = z.object({
-  slug: z.string().min(3).max(60, "Slug max word limit is 40"),
+  isPublic: z.boolean().optional().default(false),
   walletAddress: z.string(),
   title: z
     .string()

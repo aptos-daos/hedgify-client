@@ -19,3 +19,24 @@ export const default_token: Token = {
   isInPanoraTokenList: true,
   isBanned: false,
 };
+
+export const new_token = (data: Partial<Token> = {}): Token => ({
+  chainId: data.chainId ?? 1,
+  tokenAddress: data.tokenAddress ?? "0x1::aptos_coin::AptosCoin",
+  faAddress: data.faAddress ?? "0xa",
+  name: data.name ?? "Mooner Token",
+  symbol: data.symbol ?? "APT", 
+  decimals: data.decimals ?? 8,
+  bridge: data.bridge ?? null,
+  panoraSymbol: data.panoraSymbol ?? "APT",
+  usdPrice: data.usdPrice ?? "8.69506478",
+  logoUrl: data.logoUrl ?? "https://raw.githubusercontent.com/PanoraExchange/Aptos-Tokens/main/logos/APT.svg",
+  websiteUrl: data.websiteUrl ?? "https://aptosfoundation.org",
+  panoraUI: data.panoraUI ?? true,
+  panoraTags: data.panoraTags ?? [],
+  panoraIndex: data.panoraIndex ?? 1,
+  coinGeckoId: data.coinGeckoId ?? "",
+  coinMarketCapId: data.coinMarketCapId ?? -1,
+  isInPanoraTokenList: data.isInPanoraTokenList ?? false,
+  isBanned: data.isBanned ?? false,
+});

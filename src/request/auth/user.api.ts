@@ -9,6 +9,7 @@ type MessageNonceResponse = {
 type LoginResponse = {
   token: string;
   walletAddress: string;
+  role?: string;
 };
 
 /**
@@ -67,9 +68,16 @@ export default class UserAPI extends APIRequest {
    * @param signature The signature from the user’s wallet.
    * @throws If any required param is missing or if server returns an invalid response.
    */
-  async login(address: string, publicKey: string, message: string, signature: string) {
+  async login(
+    address: string,
+    publicKey: string,
+    message: string,
+    signature: string
+  ) {
     if (!address || !message || !signature) {
-      throw new Error("Account, message, and signature are all required to login.");
+      throw new Error(
+        "Account, message, and signature are all required to login."
+      );
     }
 
     const config = {
@@ -88,9 +96,6 @@ export default class UserAPI extends APIRequest {
         throw new Error("No token returned from server during login.");
       }
 
-      // Successfully received a token
-      console.log("Login successful. Token:", response.token);
-
       // Clear any existing token, then set the new one
       removeToken();
       setToken(response.token);
@@ -100,6 +105,34 @@ export default class UserAPI extends APIRequest {
     } catch (error) {
       console.error("Failed to login user:", error);
       throw error; // re-throw so the caller knows it failed
+    }
+  }
+
+  /**
+   * Gets an admin signature for claim verification.
+   * @param dao_address The DAO contract address
+   * @param joinee_address The address of the user joining the DAO
+   * @returns The admin signature
+   * @throws If the server request fails
+   */
+  async getAdminSignature(dao_address: string, joinee_address: string) {
+    const config = {
+      url: "/auth/admin",
+      method: "POST",
+      data: {
+        dao_address,
+        joinee_address,
+      },
+    };
+
+    try {
+      return await this.request<{
+        signature: string;
+        expire_time_in_seconds: string;
+      }>(config);
+    } catch (error) {
+      console.error("Failed to get admin signature:", error);
+      throw error;
     }
   }
 }

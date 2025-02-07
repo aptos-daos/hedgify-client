@@ -5,7 +5,6 @@ import CoinList from "./coin-widget/coin-list";
 import { getLabel } from "@/utils/formatters";
 import { cn } from "@/lib/utils";
 import { fetchBalance } from "@/lib/wallet";
-import { useWalletStore } from "@/store/wallet";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 interface SwapInputProps {

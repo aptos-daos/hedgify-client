@@ -1,8 +1,8 @@
 import HomeCardWrapper from "@/components/molecules/wrapper/home-card-wrapper";
 import { DaoData } from "@/validation/dao.validation";
 import React from "react";
-import { DaoCard } from "../../molecules/DaoCard";
-import { DaoCardPhone } from "./dao-card-phone";
+import { DaoCard } from "@/components/molecules/DaoCard";
+import { DaoCardLong } from "@/components/molecules/card/dao-card-long";
 
 interface Props {
   title: string;
@@ -26,7 +26,7 @@ const DaoCardList = ({ title, daos }: Props) => {
       </div>
       <div className={`${commonClasses} ${mobileClasses}`}>
         {daos.map((fund) => (
-          <DaoCardPhone {...fund} key={fund.id} />
+          <DaoCardLong {...fund} key={fund.id} />
         ))}
       </div>
     </HomeCardWrapper>

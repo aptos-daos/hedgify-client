@@ -1,8 +1,14 @@
 import instance from "../api/api.instance";
 import APIRequest from "../api/APIRequest";
 import { DaoData, DaoFormData } from "@/validation/dao.validation";
+import { CSVRow } from "@/validation/csv.validation";
 
-type DaoCreateType = DaoFormData & {inviteCode: string};
+type DaoCreateType = DaoFormData & { inviteCode: string } & {
+  whitelist: CSVRow[];
+};
+type DaoResponseType = DaoFormData & { merkle: string };
+type MerkleResponseType = { root: string; leaves: string[] };
+type DaoSingleResponseType = DaoData & { merkle: {root: string, proof: string, limit: string} };
 
 /**
  * DAOAPI class provides methods to:
@@ -11,18 +17,18 @@ type DaoCreateType = DaoFormData & {inviteCode: string};
  * 3) Delete a DAO
  * 4) Get all DAOs
  * 5) Get a single DAO by ID
-*/
+ */
 export default class DAOAPI extends APIRequest {
   constructor() {
     super(instance);
   }
-  
+
   /**
    * Creates a new DAO with the provided data
    * @param daoData The data for creating the new DAO
    * @throws If required data is missing or if the server response is invalid
-  */
-  async createDAO(daoData: DaoCreateType): Promise<DaoData> {
+   */
+  async createDAO(daoData: DaoCreateType): Promise<DaoResponseType> {
     const config = {
       url: "/dao",
       method: "POST",
@@ -30,7 +36,7 @@ export default class DAOAPI extends APIRequest {
     };
 
     try {
-      return await this.request<DaoData>(config);
+      return await this.request<DaoResponseType>(config);
     } catch (error) {
       console.error("Failed to create DAO:", error);
       throw error;
@@ -113,7 +119,7 @@ export default class DAOAPI extends APIRequest {
    * @returns DAO object
    * @throws If ID is missing or if server returns an invalid response
    */
-  async getSingleDAO(id: string): Promise<DaoData> {
+  async getSingleDAO(id: string, address?: string): Promise<DaoSingleResponseType | DaoData> {
     if (!id) {
       throw new Error("DAO ID is required");
     }
@@ -121,10 +127,11 @@ export default class DAOAPI extends APIRequest {
     const config = {
       url: `/dao/${id}`,
       method: "GET",
+      body: { address },
     };
 
     try {
-      const response = await this.request<DaoData>(config, false);
+      const response = await this.request<DaoSingleResponseType | DaoData>(config, false);
       return response;
     } catch (error) {
       console.error("Failed to fetch DAO:", error);
@@ -156,6 +163,30 @@ export default class DAOAPI extends APIRequest {
       return response;
     } catch (error) {
       console.error("Failed to check slug availability:", error);
+      throw error;
+    }
+  }
+  /**
+   * Retrieves merkle tree data for a DAO
+   * @param id The ID of the DAO to get merkle tree for
+   * @returns Object containing merkle root and leaves
+   * @throws If ID is missing or if server returns an invalid response
+   */
+  async getMerkleTree(id: string): Promise<MerkleResponseType> {
+    if (!id) {
+      throw new Error("DAO ID is required");
+    }
+
+    const config = {
+      url: `/dao/merkle/${id}`,
+      method: "GET",
+    };
+
+    try {
+      const response = await this.request<MerkleResponseType>(config, false);
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch merkle tree:", error);
       throw error;
     }
   }

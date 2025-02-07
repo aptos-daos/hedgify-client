@@ -36,7 +36,7 @@ export function ImageCard({
         />
       </div>
       <Badge className="text-black text-xs px-1.5">
-        Index Fund: {indexFund}
+        Index Fund: {indexFund.toLocaleString()}
       </Badge>
       <CardTitle className="text-white text-[14px]">
         {title}

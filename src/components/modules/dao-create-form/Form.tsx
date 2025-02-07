@@ -11,7 +11,10 @@ import uploadFile from "@/utils/upload-file";
 import { type DaoFormData } from "@/validation/dao.validation";
 import { getKebab, getTicker } from "@/utils/formatters";
 import { FileUpload } from "@/components/ui/file-upload";
-import { AVAILABLE_FUND_OPTIONS, AVAILABLE_PERIOD_OF_TRADING } from "@/constants";
+import {
+  AVAILABLE_FUND_OPTIONS,
+  AVAILABLE_PERIOD_OF_TRADING,
+} from "@/constants";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import { CSVRow, getWhitelistArray } from "@/utils/csv";
@@ -38,8 +41,7 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
   };
 
   const handleFileChange = async (files: File[]) => {
-    if(files.length === 0)
-      return;
+    if (files.length === 0) return;
     const file = files[0];
     const whtl = await getWhitelistArray(file);
     setWhitelist(whtl);
@@ -48,7 +50,6 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
   const formik = useFormik<DaoFormData>({
     initialValues: {
       title: "",
-      slug: "",
       fundTicker: "",
       description: "",
       userXHandle: session?.user?.name!,
@@ -61,7 +62,8 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       profits: 0,
       poster: "",
       tradingPeriod: 0,
-      walletAddress: address
+      walletAddress: address,
+      isPublic: true,
     },
     validationSchema: toFormikValidationSchema(daoFormSchema),
     onSubmit: async (values) => {
@@ -74,7 +76,12 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
         return;
       }
       const url = await uploadFile(file);
-      onSubmit({ ...values, poster: url, whitelist });
+      onSubmit({
+        ...values,
+        poster: url,
+        isPublic: whitelist.length === 0,
+        whitelist,
+      });
     },
   });
   // console.log(formik);
@@ -92,8 +99,9 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
     }, 0);
 
     formik.setFieldValue("fundTicker", getTicker(formik.values.title));
-    checkSlug(getKebab(formik.values.title));
   }, [formik.values.title]);
+
+  console.log(formik.errors);
 
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
@@ -102,12 +110,6 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
         name="title"
         label="Fund Name"
         placeholder="Enter your fund's name"
-        formik={formik}
-      />
-      <FormInput
-        name="slug"
-        label="Slug Name"
-        placeholder="Enter DAO Slug"
         formik={formik}
       />
       <FormInput
@@ -124,6 +126,7 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       />
       <FormInput name="daoXHandle" placeholder="@username" formik={formik} />
       <FormInput
+        label="Telegram Handle of Fund Manager"
         name="telegramHandle"
         placeholder="@username"
         formik={formik}
@@ -148,6 +151,7 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       />
       <FormInput
         name="profits"
+        label="Manager's Cut"
         type="number"
         placeholder="Enter the Profit share Fund Manager wants to keep"
         formik={formik}
@@ -164,14 +168,14 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       <FormSelect
         name="tradingPeriod"
         options={AVAILABLE_PERIOD_OF_TRADING.map((days) => ({
-          key: `${days}d`,
+          key: `${days} days`,
           value: days,
         }))}
         placeholder="Select trading period duration"
         formik={formik}
       />
 
-      <FileUpload onChange={handleFileChange}/>
+      <FileUpload onChange={handleFileChange} />
 
       <Button
         type="submit"

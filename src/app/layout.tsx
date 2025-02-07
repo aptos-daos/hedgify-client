@@ -1,3 +1,4 @@
+import { scan } from "react-scan";
 import type { Metadata } from "next";
 import RootLayoutProvider from "@/provider/RootLayoutProvider";
 import { Montserrat as FontSans } from "next/font/google";
@@ -22,6 +23,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getSession();
+  // if (typeof window !== "undefined") {
+  //   scan({
+  //     enabled: true,
+  //     log: true,
+  //   });
+  // }
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${mFont.className} antialiased`}>

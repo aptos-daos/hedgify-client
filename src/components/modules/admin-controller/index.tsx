@@ -12,7 +12,7 @@ import { useContract } from "@/hooks/use-contract";
 const AdminController: React.FC<DaoData> = (dao) => {
   const [whitelist, setWhitelist] = useState<CSVRow[]>([]);
   const [active, setActive] = useState(false);
-  const {endWhitelist} = useContract();
+  const { endWhitelist } = useContract();
 
   const handleFileChange = async (files: File[]) => {
     if (files.length === 0) return;
@@ -22,9 +22,9 @@ const AdminController: React.FC<DaoData> = (dao) => {
   };
 
   const handleToggle = async () => {
-    // TODO: Implement response
+    setActive(!active);
     const contract_resp = await endWhitelist(dao);
-  }
+  };
 
   return (
     <Card className="md:max-w-lg m-auto">
@@ -37,7 +37,7 @@ const AdminController: React.FC<DaoData> = (dao) => {
             <h3 className="text-primary">Public Stage</h3>
             <Label>Disable VIP Stage</Label>
           </div>
-          <Switch onToggle={handleToggle} />
+          <Switch checked={active} onCheckedChange={handleToggle} />
         </div>
 
         <FileUpload onChange={handleFileChange} />

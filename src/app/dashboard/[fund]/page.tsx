@@ -32,7 +32,10 @@ export default async function Page({
     return notFound();
   }
 
-  if (dao_status === DaoStatus.FUNDING_LIVE) {
+  if (
+    dao_status === DaoStatus.FUNDING_LIVE ||
+    dao_status === DaoStatus.NOT_STARTED
+  ) {
     return (
       <main>
         <AdminController {...dao} />

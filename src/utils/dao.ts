@@ -1,6 +1,6 @@
 import { DaoData } from "@/validation/dao.validation";
-import { addDays } from "date-fns";
 import { DaoStatus } from "@/constants";
+import { isAfter } from "date-fns";
 
 interface Dao extends DaoData {
   tradingStarts: Date;
@@ -11,15 +11,15 @@ interface Dao extends DaoData {
 export const getLiveStatus = (dao: Dao): DaoStatus => {
   const now = new Date();
   
-  if (dao.fundingStarts > now) {
+  if (isAfter(dao.fundingStarts, now)) {
     console.log('DAO status: Not Started');
     return DaoStatus.NOT_STARTED;
   }
-  if (dao.tradingEnds > now) {
+  if (isAfter(dao.tradingEnds, now)) {
     console.log('DAO status: Funding Live');
     return DaoStatus.FUNDING_LIVE;
   }
-  if (dao.tradingStarts > now && dao.indexFund <= dao.totalFunding) {
+  if (isAfter(dao.tradingStarts, now) && dao.indexFund <= dao.totalFunding) {
     console.log('DAO status: Trading Not Started');
     return DaoStatus.TRADING_NOT_STARTED;
   }

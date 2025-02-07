@@ -64,6 +64,7 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       tradingPeriod: 0,
       walletAddress: address,
       isPublic: true,
+      publicLimit: 0,
     },
     validationSchema: toFormikValidationSchema(daoFormSchema),
     onSubmit: async (values) => {
@@ -86,23 +87,6 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
   });
   // console.log(formik);
 
-  useEffect(() => {
-    const checkSlug = debounce(async (slug: string) => {
-      // const resp = await api.checkSlug(slug);
-      // TODO: IMPLEMENT FETCH
-      if (true) {
-        formik.setFieldValue("slug", slug);
-        return;
-      }
-      // const randomString = Math.random().toString(36).substring(2, 8);
-      // checkSlug(`${slug}-${randomString}`);
-    }, 0);
-
-    formik.setFieldValue("fundTicker", getTicker(formik.values.title));
-  }, [formik.values.title]);
-
-  console.log(formik.errors);
-
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
       <ImageUpload onChange={handleFileUpload} />
@@ -122,6 +106,13 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
         label="Fund Description"
         placeholder="Describe your fund's strategy and goals"
         type="textarea"
+        formik={formik}
+      />
+      <FormInput
+        name="publicLimit"
+        label="Public Max Limit"
+        placeholder="User Max Limit"
+        type="number"
         formik={formik}
       />
       <FormInput name="daoXHandle" placeholder="@username" formik={formik} />

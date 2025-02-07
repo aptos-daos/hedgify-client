@@ -140,33 +140,6 @@ export default class DAOAPI extends APIRequest {
   }
 
   /**
-   * Checks if a slug is available for use
-   * @param slug The slug to check availability for
-   * @returns Object containing availability status
-   * @throws If slug is missing or if server returns an invalid response
-   */
-  async checkSlug(slug: string): Promise<{ available: boolean }> {
-    if (!slug) {
-      throw new Error("Slug is required");
-    }
-
-    const config = {
-      url: `/dao/slug/${slug}`,
-      method: "GET",
-    };
-
-    try {
-      const response = await this.request<{ available: boolean }>(
-        config,
-        false
-      );
-      return response;
-    } catch (error) {
-      console.error("Failed to check slug availability:", error);
-      throw error;
-    }
-  }
-  /**
    * Retrieves merkle tree data for a DAO
    * @param id The ID of the DAO to get merkle tree for
    * @returns Object containing merkle root and leaves

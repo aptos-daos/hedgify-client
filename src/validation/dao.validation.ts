@@ -16,7 +16,6 @@ const dateSchema = z
   });
 
 export const daoFormSchema = z.object({
-  isPublic: z.boolean().optional().default(false),
   walletAddress: z.string(),
   title: z
     .string()
@@ -42,6 +41,8 @@ export const daoFormSchema = z.object({
     ])
     .refine((val) => val > 0, "Index fund must be greater than 0"),
   profits: z.number().min(0).max(10, "Profits must be between 0 and 10"),
+  isPublic: z.boolean().optional().default(false),
+  publicLimit: z.number(),
 
   userXHandle: z.string(),
   daoXHandle: z

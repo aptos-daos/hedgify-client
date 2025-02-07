@@ -13,9 +13,6 @@ const WalletWrapper = ({ children }: Props) => {
   const pathname = usePathname();
   return (
     <>
-      {/* TODO: <Link href="/dashboard">
-        <Button>Dashboard</Button>
-      </Link> */}
       {children}
       <div className="w-fit">
         <WalletSelector secure={SECURED_PATHS.includes(pathname)} />

@@ -14,9 +14,7 @@ const uploadFile = (file: File): Promise<string> => {
 
     uploadTask.on(
       "state_changed",
-      (snapshot) => {
-        // TODO: Handle Progress
-      },
+      (snapshot) => {},
       (error) => {
         reject(error);
       },

@@ -15,7 +15,7 @@ export default function TwitterAuthButton() {
   return (
     <>
       <Button onClick={() => signOut()}>
-        <TwitterLogo /> Sign Out
+        <TwitterLogo /> {session.user?.name ?? "Sign Out"}
       </Button>
     </>
   );

@@ -1,18 +1,21 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import useAuthStore from "@/store/auth";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 const DashboardButton = () => {
   const router = useRouter();
-  const { isAdmin } = useAuthStore();
+  const { connected } = useWallet();
   const handleClick = () => {
     router.push("/dashboard");
   };
-  if (!isAdmin) return <></>;
-  return <Button onClick={handleClick}>Dashboard</Button>;
+  return (
+    <Button onClick={handleClick} disabled={!connected}>
+      Dashboard
+    </Button>
+  );
 };
 
 export default DashboardButton;

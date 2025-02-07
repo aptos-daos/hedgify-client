@@ -46,7 +46,7 @@ const WalletLoginProvider: FC<{ children: ReactNode }> = ({ children }) => {
               account.address,
               account.publicKey as string,
               response.fullMessage,
-              response.signature.toString() // TODO: make remove to string
+              response.signature.toString()
             );
 
             if (resp.role && resp.role === "admin") {

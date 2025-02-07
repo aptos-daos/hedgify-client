@@ -10,7 +10,7 @@ const NavBar = () => {
     <>
       <nav className="z-50 flex items-center justify-end gap-2 p-2 md:p-4 sticky top-0 bg-background/50 backdrop-blur-lg border-b">
         <div className="flex items-center gap-2">
-          {/* <DashboardButton /> TODO: HYDRATION ERROR*/}
+          <DashboardButton /> 
           <TwitterLoginButton />
           <Wallet>
             <Link href="/create-dao" className="hidden md:block">

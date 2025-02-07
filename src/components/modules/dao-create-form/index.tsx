@@ -11,12 +11,16 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import InviteAPI from "@/request/invite/invite.api";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { useSession } from "next-auth/react";
-import { DaoFormData } from "@/validation/dao.validation";
+import { DaoData, DaoFormData } from "@/validation/dao.validation";
 import { useContract } from "@/hooks/use-contract";
 import { useDao } from "@/hooks/use-dao";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { CSVRow } from "@/validation/csv.validation";
 import { toast } from "@/hooks/use-toast";
+import { Modal, ModalBody, ModalContent } from "@/components/ui/animated-modal";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const inviteSchema = z.object({
   inviteCode: z.string().min(6, "Invite code must be at least 6 characters"),
@@ -32,6 +36,9 @@ interface IData extends DaoFormData {
 }
 
 const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
+  const router = useRouter();
+  const [dao, setDao] = useState<DaoData | null>();
+  const [isOpen, setIsOpen] = useState(false);
   const { account, connected } = useWallet();
   const { status } = useSession();
   const inviteApi = new InviteAPI();
@@ -114,6 +121,9 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
       });
       return;
     }
+
+    setDao(dao);
+    setIsOpen(true);
   };
 
   return (
@@ -180,6 +190,31 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Modal open={isOpen} setOpen={setIsOpen}>
+        <ModalBody>
+          <ModalContent>
+            <h3 className="text-lg font-semibold">Transaction Status</h3>
+            {dao && dao.poster && (
+              <>
+                <div className="relative overflow-hidden z-40 bg-white flex flex-col items-start justify-start h-64 w-full mx-auto rounded-md">
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={dao?.poster}
+                      alt="Preview"
+                      className="object-cover"
+                      fill
+                    />
+                  </div>
+                </div>
+                <Button onClick={() => router.replace(`/dashboard/${dao.id}`)}>
+                  Check Modal Dashboard
+                </Button>
+              </>
+            )}
+          </ModalContent>
+        </ModalBody>
+      </Modal>
     </>
   );
 };

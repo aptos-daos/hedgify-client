@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { debounce } from "lodash";
 import { useFormik } from "formik";
 import { Button } from "@/components/ui/button";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { daoFormSchema, daoSchema } from "@/validation/dao.validation";
+import { daoFormSchema } from "@/validation/dao.validation";
 import { FormInput, FormSelect } from "./form-input";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { compressImage } from "@/utils/image";
 import uploadFile from "@/utils/upload-file";
 import { type DaoFormData } from "@/validation/dao.validation";
-import { getKebab, getTicker } from "@/utils/formatters";
+import { getTicker } from "@/utils/formatters";
 import { FileUpload } from "@/components/ui/file-upload";
 import {
   AVAILABLE_FUND_OPTIONS,
@@ -85,7 +84,10 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       });
     },
   });
-  // console.log(formik);
+
+  useEffect(() => {
+    formik.setFieldValue("fundTicker", getTicker(formik.values.title));
+  }, [formik.values.title]);
 
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
@@ -153,6 +155,7 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
           key: item.toLocaleString(),
           value: item.toString(),
         }))}
+        label="The Amount you Want to Raise"
         placeholder="Enter the Profit share Fund Manager wants to keep"
         formik={formik}
       />

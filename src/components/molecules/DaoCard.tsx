@@ -7,15 +7,10 @@ import Link from "next/link";
 export function DaoCard({ ...dao }: DaoData) {
   const { id } = dao;
   return (
-    <>
-      <ImageCard
-        {...dao}
-        descriptionView
-      >
-        <Link href={`/funds/${id}`}>
-          <Button className="w-full mt-2 font-semibold">Check This Fund</Button>
-        </Link>
-      </ImageCard>
-    </>
+    <ImageCard className="h-[23rem]" {...dao} descriptionView>
+      <Link href={`/funds/${id}`}>
+        <Button className="w-full mt-2 font-semibold">Check This Fund</Button>
+      </Link>
+    </ImageCard>
   );
 }

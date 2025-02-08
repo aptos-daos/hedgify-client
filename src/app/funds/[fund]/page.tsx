@@ -3,16 +3,15 @@ import DaoMessage from "@/components/modules/dao-message";
 import PreviewDisplay from "@/components/modules/preview-display";
 import SwapWidget from "@/components/modules/swap-widgets/token-swap-widget";
 import { Separate } from "@/components/molecules/separate-layout";
-import { FUNDING_PERIOD, FUNDING_HOLD_PERIOD } from "@/constants";
 import DAOAPI from "@/request/dao/dao.api";
 import { notFound } from "next/navigation";
-import { addDays } from "date-fns";
 import Screener from "@/components/modules/screener";
 import DaoDetails from "@/components/modules/preview-display/DaoDetails";
 import ParticipantsTable from "@/components/modules/participants-table";
 import getDAODetailsIndexer from "@/request/graphql/get_daos";
 import { getTotalFunding } from "@/request/graphql/get_total_funding";
 import { getLiveStatus } from "@/utils/dao";
+import { DaoStatus } from "@/constants";
 
 export default async function Page({
   params,
@@ -40,6 +39,7 @@ export default async function Page({
     <main>
       <DaoMessage
         status={dao_status}
+        tradingStarts={new Date(indexer_dao.trading_start_time * 1000)}
         tradingEnds={new Date(indexer_dao.trading_end_time * 1000)}
         {...dao}
       />
@@ -48,12 +48,12 @@ export default async function Page({
         <Separate.Layout>
           <PreviewDisplay status={dao_status} {...dao} />
           <DaoDetails {...dao} />
-          {/* <ParticipantsTable daoAddress={dao.treasuryAddress} /> */}
         </Separate.Layout>
 
         <Separate.Layout>
           <SwapWidget {...dao} />
-          <Screener />
+          <ParticipantsTable daoAddress={dao.treasuryAddress} />
+          {dao_status === DaoStatus.TRADING_LIVE && <Screener />}
           {/* <MyDaoToken {...dao} tradingEnds="" /> */}
         </Separate.Layout>
       </Separate.Root>

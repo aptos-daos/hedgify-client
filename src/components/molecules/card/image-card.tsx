@@ -42,7 +42,7 @@ export function ImageCard({
         {title}
       </CardTitle>
       {descriptionView && (
-        <CardDescription className="line-clamp-2 max-w-52">
+        <CardDescription className="line-clamp-1 max-w-52">
           {description}
         </CardDescription>
       )}

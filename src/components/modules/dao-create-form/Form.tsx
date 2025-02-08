@@ -51,7 +51,8 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       title: "",
       fundTicker: "",
       description: "",
-      userXHandle: session?.user?.name!,
+      userXHandle:
+        session?.user?.username ?? session?.user?.name ?? session?.user?.id!,
       daoXHandle: "",
       telegramHandle: "",
       telegramGroup: "",
@@ -63,7 +64,7 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       tradingPeriod: 0,
       walletAddress: address,
       isPublic: true,
-      publicLimit: 0,
+      publicLimit: 1000,
     },
     validationSchema: toFormikValidationSchema(daoFormSchema),
     onSubmit: async (values) => {
@@ -108,13 +109,6 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
         label="Fund Description"
         placeholder="Describe your fund's strategy and goals"
         type="textarea"
-        formik={formik}
-      />
-      <FormInput
-        name="publicLimit"
-        label="Public Max Limit"
-        placeholder="User Max Limit"
-        type="number"
         formik={formik}
       />
       <FormInput name="daoXHandle" placeholder="@username" formik={formik} />
@@ -166,6 +160,13 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
           value: days,
         }))}
         placeholder="Select trading period duration"
+        formik={formik}
+      />
+      <FormInput
+        name="publicLimit"
+        label="Public Max Limit"
+        placeholder="User Max Limit"
+        type="number"
         formik={formik}
       />
 

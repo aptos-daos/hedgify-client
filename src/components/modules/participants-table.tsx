@@ -9,6 +9,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import getParticipantsIndexer from "@/request/graphql/get_participants";
 import { useQuery } from "@tanstack/react-query";
 import { type Participant } from "@/constants/queries/participants";
@@ -39,7 +40,6 @@ const ParticipantsTable = ({ daoAddress }: { daoAddress: string }) => {
     },
   ];
 
-  if (isLoading || !data) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
@@ -49,7 +49,12 @@ const ParticipantsTable = ({ daoAddress }: { daoAddress: string }) => {
         <CardDescription>List of all participants in the pool</CardDescription>
       </CardHeader>
       <CardContent>
-        <DataTable<Participant> columns={columns} data={data} />
+        <DataTable<Participant>
+          columns={columns}
+          isLoading={isLoading}
+          // @ts-ignore
+          data={data}
+        />
       </CardContent>
     </Card>
   );

@@ -3,6 +3,12 @@ import { DaoData } from "@/validation/dao.validation";
 import React from "react";
 import { DaoCard } from "@/components/molecules/DaoCard";
 import { DaoCardLong } from "@/components/molecules/card/dao-card-long";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import {} from "@/components/ui/card";
 
 interface Props {
   title: string;
@@ -19,11 +25,16 @@ const DaoCardList = ({ title, daos }: Props) => {
 
   return (
     <HomeCardWrapper title={title}>
-      <div className={`${commonClasses} ${desktopClasses}`}>
-        {daos.map((fund) => (
-          <DaoCard {...fund} key={fund.id} />
-        ))}
-      </div>
+      <Carousel className={`${commonClasses} ${desktopClasses}`}>
+        <CarouselContent>
+          {daos.map((fund) => (
+            <CarouselItem key={fund.id} className='basis-1/3'>
+              <DaoCard {...fund} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
       <div className={`${commonClasses} ${mobileClasses}`}>
         {daos.map((fund) => (
           <DaoCardLong {...fund} key={fund.id} />

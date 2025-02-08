@@ -20,21 +20,20 @@ const Copy: React.FC<Props> = ({ copyable, content }) => {
     }
   };
 
-  if (!copyable) return null;
-
   return (
     <motion.button
       onClick={handleCopy}
       className="flex gap-2"
       aria-label="Copy to clipboard"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={copyable ? { scale: 1.05 } : undefined}
+      whileTap={copyable ? { scale: 0.95 } : undefined}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
+      disabled={!copyable}
     >
       {content}
-      <Clipboard className="w-4 h-4 text-gray-400 cursor-pointer" />
+      {copyable && <Clipboard className="w-4 h-4 text-gray-400 cursor-pointer" />}
     </motion.button>
   );
 };

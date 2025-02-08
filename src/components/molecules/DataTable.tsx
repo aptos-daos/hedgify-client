@@ -80,7 +80,7 @@ const DataTable = <T extends object>({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((row, rowIndex) => {
+          {Array.isArray(data) && data?.map((row, rowIndex) => {
             const rowKey = rowKeySelector(row, rowIndex);
             return (
               <TableRow key={rowKey}>

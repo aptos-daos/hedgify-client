@@ -10,6 +10,7 @@ interface Props extends DaoData {
 }
 
 const DaoDetails: React.FC<Props> = ({
+  daoXHandle,
   description,
   treasuryAddress,
   daoCoinAddress,
@@ -22,8 +23,8 @@ const DaoDetails: React.FC<Props> = ({
   ),
 }) => {
   const data = [
-    { label: "Founded By", value: "John Doe" },
-    { label: "Bio", value: description },
+    { label: "Founded By", value: daoXHandle },
+    { label: "Description", value: description },
     {
       label: "DAO's Owner Address",
       value: formatAddress(walletAddress),
@@ -39,7 +40,7 @@ const DaoDetails: React.FC<Props> = ({
       value: formatAddress(daoCoinAddress),
       copyable: true,
     },
-    { label: "Created", value: format(createdAt, "dd MMM yyyy") },
+    { label: "Created", value: format(createdAt, "dd MMM yyyy"), badge: true },
     {
       label: "Trading Date",
       value: format(tradingStartsAt, "dd MMM yyyy"),

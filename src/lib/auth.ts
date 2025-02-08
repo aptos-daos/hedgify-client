@@ -9,6 +9,7 @@ declare module "next-auth" {
       name?: string | null;
       email?: string | null;
       image?: string | null;
+      username?: string | null;
     };
   }
 }
@@ -29,17 +30,21 @@ const authOptions: AuthOptions = {
   ],
   secret: process.env.AUTH_SECRET,
   callbacks: {
-    async signIn() {
+    async signIn({ user, account, profile }) {
       return true;
     },
     async session({ session, token }) {
       if (session.user) {
-        // @ts-ignore
         session.user.id = token.sub as string;
+        session.user.username = token.username as string;
       }
       return session;
     },
     async jwt({ token, user, account, profile }) {
+      if (profile) {
+        // @ts-ignore
+        token.username = profile.data.username;
+      }
       if (user) {
         token.id = user.id;
       }

@@ -21,13 +21,13 @@ const HomeCardWrapper = ({
       <BottomTopAnimation className="relative py-4 md:py-6 w-full md:w-fit m-auto">
         <div
           className={cn(
-            "absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 -translate-y-1/2",
+            "z-100 absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 -translate-y-1/2",
             crown && "-translate-y-3/4"
           )}
         >
           {crown && <Crown className="text-primary" size={20} />}
           <div className="p-1.5 md:p-2 px-3 md:px-4 bg-primary w-fit rounded-full">
-            <h2 className="text-[10px] md:text-xs font-bold tracking-widest text-primary-foreground">
+            <h2 className="text-sm md:text-xs font-bold tracking-widest text-primary-foreground">
               {title.toLocaleUpperCase()}
             </h2>
           </div>

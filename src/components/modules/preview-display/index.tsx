@@ -38,7 +38,7 @@ const PreviewDisplay: React.FC<Props> = ({status, ...dao}) => {
           <AnimatedSocialTooltip items={data} />
         </ImageCard>
       </Separate.Layout>
-      <Separate.Layout>
+      <Separate.Layout className="grow-[2] shrink basis-auto">
         <LiveView status={status} {...dao} />
       </Separate.Layout>
     </Separate.Root>

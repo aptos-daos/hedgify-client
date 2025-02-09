@@ -3,8 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TwitterLogo } from "@phosphor-icons/react/dist/ssr";
 
-interface InteractiveHoverButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+type InteractiveHoverButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const TwitterHoverButton = React.forwardRef<
   HTMLButtonElement,

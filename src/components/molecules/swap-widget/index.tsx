@@ -30,6 +30,8 @@ interface Props {
   toObj: SwapObject;
   onClick: () => void;
   footer?: string;
+  onChange?: (from: SwapObject, to: SwapObject) => void;
+  isActive?: boolean;
 }
 
 const SwapWidget: React.FC<Props> = ({
@@ -38,6 +40,8 @@ const SwapWidget: React.FC<Props> = ({
   onClick,
   footer,
   inputSwap = false,
+  onChange,
+  isActive  = false
 }) => {
   const { connected } = useWallet();
   const [from, setFrom] = useState<SwapObject>(fromObj);
@@ -47,26 +51,33 @@ const SwapWidget: React.FC<Props> = ({
     const temp = from;
     setFrom(to);
     setTo(temp);
+    onChange?.(to, from);
   };
 
   const handleChangeAmount = (amount: string) => {
-    setFrom((prev) => ({
-      ...prev,
+    const newFrom = {
+      ...from,
       amount: Number(amount),
-    }));
+    };
+    setFrom(newFrom);
+    onChange?.(newFrom, to);
   };
 
   const handleInputChange = async (value: number, key: "from" | "to") => {
     if (key === "from") {
-      setFrom((prev) => ({
-        ...prev,
+      const newFrom = {
+        ...from,
         amount: value,
-      }));
+      };
+      setFrom(newFrom);
+      onChange?.(newFrom, to);
     } else {
-      setTo((prev) => ({
-        ...prev,
+      const newTo = {
+        ...to,
         amount: value,
-      }));
+      };
+      setTo(newTo);
+      onChange?.(from, newTo);
     }
 
     const response = await getAllQuotes(
@@ -79,15 +90,19 @@ const SwapWidget: React.FC<Props> = ({
 
   const handleTokenChange = (token: Token, key: "from" | "to") => {
     if (key === "from") {
-      setFrom((prev) => ({
-        ...prev,
+      const newFrom = {
+        ...from,
         active: token,
-      }));
+      };
+      setFrom(newFrom);
+      onChange?.(newFrom, to);
     } else {
-      setTo((prev) => ({
-        ...prev,
+      const newTo = {
+        ...to,
         active: token,
-      }));
+      };
+      setTo(newTo);
+      onChange?.(from, newTo);
     }
   };
 
@@ -95,12 +110,11 @@ const SwapWidget: React.FC<Props> = ({
     <Card>
       <CardHeader
         className="flex-row justify-between gap-2 p-5"
-        hidden={!inputSwap}
       >
         <Button className="w-full">Buy</Button>
         <Button className="w-full bg-red-400">Sell</Button>
       </CardHeader>
-      <CardContent className={cn("space-y-4 p-5", inputSwap && "pt-0")}>
+      <CardContent className={cn("space-y-4 p-5, pt-0")}>
         <div className="space-y-5">
           {/* Predefined Amounts */}
           <div className="grid grid-cols-4 gap-2">
@@ -150,7 +164,7 @@ const SwapWidget: React.FC<Props> = ({
           {/* Swap Button */}
           <Button
             className="w-full bg-primary"
-            disabled={!connected}
+            disabled={!connected || !isActive}
             onClick={onClick}
           >
             {connected ? "SWAP for the Sake of GOD" : "Please Connect Wallet"}

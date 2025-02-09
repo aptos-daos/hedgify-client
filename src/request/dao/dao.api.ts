@@ -8,7 +8,7 @@ type DaoCreateType = DaoFormData & { inviteCode: string } & {
 };
 type DaoResponseType = DaoFormData & { merkle: string };
 type MerkleResponseType = { root: string; leaves: string[] };
-type DaoSingleResponseType = DaoData & { merkle: {root: string, proof: string, limit: string} };
+export type DaoSingleResponseType = DaoData & { merkle?: {root: string, proof: string, limit: string} };
 
 /**
  * DAOAPI class provides methods to:

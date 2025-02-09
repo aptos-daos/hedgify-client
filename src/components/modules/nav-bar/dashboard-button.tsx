@@ -12,7 +12,7 @@ const DashboardButton = () => {
     router.push("/dashboard");
   };
   return (
-    <Button onClick={handleClick} disabled={!connected}>
+    <Button onClick={handleClick} className={`${!connected && "hidden"}`}>
       Dashboard
     </Button>
   );

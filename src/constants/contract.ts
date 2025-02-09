@@ -56,19 +56,6 @@ export const RESOURCES: IResources = {
   END_WHITELIST: `${MODULE_ADDRESS}::${MODULE_NAME}::end_whitelist`,
 };
 
-export const TYPE_ARGUMENTS: IArguments = {
-  CREATE_DAO: [],
-  START_TREADING: [],
-  JOIN_VIP: [], // TODO: add type arguments
-  JOIN_PUBLIC: [], // TODO: add type arguments
-  CLAIM_DAO_TOKENS: [],
-  WITHDRAW_UNSUCCESSFUL: [], // TODO: add type arguments
-  SET_WITHDRAWABLE: [], // TODO: add type arguments
-  WITHDRAW_COMPLETION: [], // TODO: add type arguments
-  CREATE_STORE: [],
-  END_WHITELIST: [],
-};
-
 export const TYPE_FUN_ARGUMENTS = {
   CREATE_DAO: (dao: IData) => [
     dao.title,
@@ -82,7 +69,7 @@ export const TYPE_FUN_ARGUMENTS = {
     getSecondsTime(dao.fundingStarts),
     dao.tradingPeriod * 24 * 60 * 60, // IN SECONDS
     dao.merkle?.root || [],
-    100000,
+    dao.publicLimit,
     dao.profits,
   ],
   JOIN_VIP: (dao: IData, amount: number) => [

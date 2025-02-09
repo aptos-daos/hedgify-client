@@ -19,6 +19,10 @@ export default async function Page({
   const api = new DAOAPI();
 
   const dao = await api.getSingleDAO(fundId);
+
+  if (!dao) {
+    return notFound();
+  }
   const indexer_dao = await getDAODetailsIndexer(dao.treasuryAddress);
   const totalFunding = await getTotalFunding(dao.treasuryAddress);
   const dao_status = getLiveStatus({
@@ -28,20 +32,16 @@ export default async function Page({
     tradingEnds: new Date(indexer_dao.trading_end_time),
   });
 
-  if (!dao) {
-    return notFound();
+  if (
+    dao_status === DaoStatus.FUNDING_LIVE ||
+    dao_status === DaoStatus.NOT_STARTED
+  ) {
+    return (
+      <main>
+        <AdminController {...dao} />
+      </main>
+    );
   }
-
-  // if (
-  //   dao_status === DaoStatus.FUNDING_LIVE ||
-  //   dao_status === DaoStatus.NOT_STARTED
-  // ) {
-  //   return (
-  //     <main>
-  //       <AdminController {...dao} />
-  //     </main>
-  //   );
-  // }
 
   return (
     <main>

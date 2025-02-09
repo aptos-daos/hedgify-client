@@ -15,8 +15,8 @@ export const DAO_TOP_MESSAGE = {
   TRADING_LIVE: (timestr: string) =>
     `Trading is Live ; Fund will Stop on ${timestr}`
 };
-export const AVAILABLE_FUND_OPTIONS = [1000, 5000, 10000, 50000, 100000];
-export const AVAILABLE_PERIOD_OF_TRADING = [30, 90, 120, 150, 180, 270];
+export const AVAILABLE_FUND_OPTIONS = [2, 1000, 5000, 10000, 50000, 100000];
+export const AVAILABLE_PERIOD_OF_TRADING = [1, 30, 90, 120, 150, 180, 270];
 export const TOTAL_DIVIDED_TOKENS = 1e9;
 
 export enum DaoStatus {

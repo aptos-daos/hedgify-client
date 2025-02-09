@@ -7,16 +7,16 @@ import { default_token, new_token } from "@/constants/token";
 import { DaoData } from "@/validation/dao.validation";
 import { useContract } from "@/hooks/use-contract";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { useDao } from "@/hooks/use-dao";
 import { toast } from "@/hooks/use-toast";
 import UserAPI from "@/request/auth/user.api";
-import DAOAPI from "@/request/dao/dao.api";
+import DAOAPI, { DaoSingleResponseType } from "@/request/dao/dao.api";
 
 const SwapWidget: React.FC<DaoData> = (dao) => {
   const userApi = new UserAPI();
   const daoApi = new DAOAPI();
   const token = new_token({ symbol: dao.fundTicker });
-  const { account } = useWallet();
+  const { account, connected } = useWallet();
+  const [daoData, setDaoData] = useState<DaoSingleResponseType>(dao);
   const [amount, setAmount] = useState(0);
   const { joinDaoVip, joinDaoPublic } = useContract();
   const { tokenList } = useTokenStore();
@@ -46,30 +46,40 @@ const SwapWidget: React.FC<DaoData> = (dao) => {
     }
   }, [tokenList]);
 
+  useEffect(() => {
+    const fetchDao = async () => {
+      if (connected && !dao.isPublic && account?.address) {
+        const idao = await daoApi.getSingleDAO(dao.id, account.address);
+        setDaoData(idao);
+      }
+    };
+    
+    fetchDao();
+  }, [connected, dao.isPublic, dao.id, account?.address]);
+
   const handleClick = async () => {
     if (!account?.address) {
       toast({
         title: "Please Connect Wallet",
         variant: "destructive",
       });
+      return;
     }
 
     if (dao.isPublic) {
       const resp = await userApi.getAdminSignature(
         dao.treasuryAddress,
-        account?.address!
+        account.address
       );
 
       const contract_resp = await joinDaoPublic(
-        dao,
+        daoData,
         amount,
         resp.signature,
-        resp.signature
+        resp.expire_time_in_seconds
       );
-
     } else {
-      const resp = await daoApi.getSingleDAO(dao.id, account?.address!);
-      const contract_resp = await joinDaoVip(resp, amount);
+      const contract_resp = await joinDaoVip(daoData, amount);
     }
   };
 
@@ -78,6 +88,8 @@ const SwapWidget: React.FC<DaoData> = (dao) => {
       fromObj={state.from}
       toObj={state.to}
       onClick={handleClick}
+      onChange={(value) => setAmount(value.amount)}
+      isActive={dao.isPublic || !daoData.merkle}
     />
   );
 };

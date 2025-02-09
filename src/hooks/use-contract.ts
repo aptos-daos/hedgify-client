@@ -6,7 +6,6 @@ import { useToast } from "./use-toast";
 import { DaoData } from "@/validation/dao.validation";
 import {
   RESOURCES,
-  TYPE_ARGUMENTS,
   TYPE_FUN_ARGUMENTS,
 } from "@/constants/contract";
 
@@ -62,7 +61,7 @@ const useContract = () => {
     const _key = "CREATE_DAO";
     return (await executeTransaction(
       RESOURCES[_key],
-      TYPE_ARGUMENTS[_key],
+      [],
       TYPE_FUN_ARGUMENTS[_key](dao)
     )) as TransactionData;
   };
@@ -72,7 +71,7 @@ const useContract = () => {
 
     return (await executeTransaction(
       RESOURCES[_key],
-      TYPE_ARGUMENTS[_key],
+      [],
       TYPE_FUN_ARGUMENTS[_key](dao, amount)
     )) as TransactionData;
   };
@@ -87,7 +86,7 @@ const useContract = () => {
 
     return (await executeTransaction(
       RESOURCES[_key],
-      TYPE_ARGUMENTS[_key],
+      [dao.treasuryAddress],
       TYPE_FUN_ARGUMENTS[_key](dao, amount, signature, expire_time_in_seconds)
     )) as TransactionData;
   };
@@ -97,7 +96,7 @@ const useContract = () => {
 
     return (await executeTransaction(
       RESOURCES[_key],
-      TYPE_ARGUMENTS[_key],
+      [],
       TYPE_FUN_ARGUMENTS[_key](dao)
     )) as TransactionData;
   };
@@ -107,7 +106,7 @@ const useContract = () => {
 
     return (await executeTransaction(
       RESOURCES[_key],
-      TYPE_ARGUMENTS[_key],
+      [],
       TYPE_FUN_ARGUMENTS[_key](dao)
     )) as TransactionData;
   };

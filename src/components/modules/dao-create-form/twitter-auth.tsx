@@ -2,9 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { TwitterLogo } from "@phosphor-icons/react/dist/ssr";
-import { TextMorph } from "@/components/ui/text-morph";
 import { useState } from "react";
+import { TwitterHoverButton } from "@/components/magicui/twitter-hover-button";
 
 export default function TwitterAuthButton() {
   const { data: session } = useSession();
@@ -17,16 +16,15 @@ export default function TwitterAuthButton() {
     );
 
   return (
-    <Button
+    <TwitterHoverButton
       onClick={() => signOut()}
       onMouseEnter={() => setText("Sign Out")}
       onMouseLeave={() => setText(defText)}
-      className="transition min-w-32"
+      className="transition"
     >
-      <TwitterLogo />
-      <TextMorph className="text-black">
+      <span className="flex items-center justify-center gap-2">
         {text}
-      </TextMorph>
-    </Button>
+      </span>
+    </TwitterHoverButton>
   );
 }

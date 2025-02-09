@@ -23,11 +23,11 @@ const NavBar = () => {
         </div>
       </nav>
 
-      <Link href="/create-dao" className="fixed bottom-4 right-4 z-50 md:hidden">
+      {/* <Link href="/create-dao" className="fixed bottom-4 right-4 z-50 md:hidden">
         <Button className="flex items-center h-12 w-12 rounded-full shadow-lg">
           <PlusSquare className="h-5 w-5" />
         </Button>
-      </Link>
+      </Link> */}
     </>
   );
 };

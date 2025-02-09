@@ -8,7 +8,7 @@ const getParticipantsIndexer = async (daoAddress: string) => {
   const response = await indexerClient.query<GetParticipantsResponse>({
     query: GET_PARTICIPANTS,
     variables: {
-      dao_address: daoAddress.toLowerCase(),
+      daoAddress,
     },
   });
   return response.data.daos_fun_events_dao_join_events;

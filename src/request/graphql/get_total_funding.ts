@@ -6,8 +6,7 @@ export const getTotalFunding = async (treasuryAddress: string) => {
     const result = await indexerClient.query({
       query: GET_TOTAL_INVESTED,
       variables: {
-        daoAddress:
-          "0xef0b84d92005fcc9c0a2283134365107eb6b2ce2bbb1af2377dcf41ef8f5f66e", //TODO: treasuryAddress,
+        daoAddress: treasuryAddress,
       },
     });
 

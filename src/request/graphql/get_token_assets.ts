@@ -43,6 +43,7 @@ export interface FungibleAssetResponse {
   current_fungible_asset_balances: FungibleAssetBalance[];
 }
 
+// TODO: REMOVE IT
 export const GET_TOKEN_BALANCE = gql`
   query CoinBalances($address: String!) {
     current_coin_balances(where: { owner_address: { _eq: $address } }) {

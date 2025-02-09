@@ -1,7 +1,7 @@
 import { Separate } from "@/components/molecules/separate-layout";
 import DAOAPI from "@/request/dao/dao.api";
 import { notFound } from "next/navigation";
-import ManagerSwapWidget from "@/components/modules/swap-widgets/manager-swap-widget";
+import { ManagerSwapWidget } from "@/components/modules/swap-widgets";
 import getDAODetailsIndexer from "@/request/graphql/get_daos";
 import { getLiveStatus } from "@/utils/dao";
 import { getTotalFunding } from "@/request/graphql/get_total_funding";
@@ -32,16 +32,16 @@ export default async function Page({
     tradingEnds: new Date(indexer_dao.trading_end_time),
   });
 
-  if (
-    dao_status === DaoStatus.FUNDING_LIVE ||
-    dao_status === DaoStatus.NOT_STARTED
-  ) {
-    return (
-      <main>
-        <AdminController {...dao} />
-      </main>
-    );
-  }
+  // if (
+  //   dao_status === DaoStatus.FUNDING_LIVE ||
+  //   dao_status === DaoStatus.NOT_STARTED
+  // ) {
+  //   return (
+  //     <main>
+  //       <AdminController {...dao} />
+  //     </main>
+  //   );
+  // }
 
   return (
     <main>

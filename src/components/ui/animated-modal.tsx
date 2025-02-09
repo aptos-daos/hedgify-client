@@ -1,14 +1,13 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import React, {
   ReactNode,
   createContext,
   useContext,
   useEffect,
-  useRef,
 } from "react";
-import { useOutsideClick } from "@/hooks/use-outside";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 interface ModalContextType {
   open: boolean;
@@ -35,9 +34,11 @@ export function Modal({
   setOpen: (open: boolean) => void;
 }) {
   return (
-    <ModalContext.Provider value={{ open, setOpen }}>
-      {children}
-    </ModalContext.Provider>
+    <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
+      <ModalContext.Provider value={{ open, setOpen }}>
+        {children}
+      </ModalContext.Provider>
+    </DialogPrimitive.Root>
   );
 }
 
@@ -48,17 +49,15 @@ export const ModalTrigger = ({
   children: ReactNode;
   className?: string;
 }) => {
-  const { setOpen } = useModal();
   return (
-    <button
+    <DialogPrimitive.Trigger
       className={cn(
         "px-4 py-2 rounded-md text-black dark:text-white text-center relative overflow-hidden",
         className
       )}
-      onClick={() => setOpen(true)}
     >
       {children}
-    </button>
+    </DialogPrimitive.Trigger>
   );
 };
 
@@ -79,64 +78,61 @@ export const ModalBody = ({
     }
   }, [open]);
 
-  const modalRef = useRef<any>(null);
-  const { setOpen } = useModal();
-  useOutsideClick(modalRef, () => setOpen(false));
-
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: 1,
-            backdropFilter: "blur(10px)",
-          }}
-          exit={{
-            opacity: 0,
-            backdropFilter: "blur(0px)",
-          }}
-          className="fixed [perspective:800px] [transform-style:preserve-3d] inset-0 h-full w-full  flex items-center justify-center z-50"
-        >
-          <Overlay />
-
+    <DialogPrimitive.Portal>
+      <AnimatePresence>
+        <DialogPrimitive.Title className="sr-only">Modal Dialog</DialogPrimitive.Title>
+        {open && (
           <motion.div
-            ref={modalRef}
-            className={cn(
-              "min-h-[50%] max-h-[90%] md:max-w-[40%] bg-white dark:bg-neutral-950 border border-transparent dark:border-neutral-800 md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-hidden",
-              className
-            )}
-            initial={{
-              opacity: 0,
-              scale: 0.5,
-              rotateX: 40,
-              y: 40,
-            }}
+            initial={{ opacity: 0 }}
             animate={{
               opacity: 1,
-              scale: 1,
-              rotateX: 0,
-              y: 0,
+              backdropFilter: "blur(10px)",
             }}
             exit={{
               opacity: 0,
-              scale: 0.8,
-              rotateX: 10,
+              backdropFilter: "blur(0px)",
             }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 15,
-            }}
+            className="fixed [perspective:800px] [transform-style:preserve-3d] inset-0 h-full w-full flex items-center justify-center z-50"
           >
-            <CloseIcon />
-            {children}
+            <Overlay />
+            <DialogPrimitive.Content asChild>
+              <motion.div
+                className={cn(
+                  "min-h-60 max-h-96 max-w-sm bg-white dark:bg-neutral-950 border border-transparent dark:border-neutral-800 md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-hidden",
+                  className
+                )}
+                initial={{
+                  opacity: 0,
+                  scale: 0.5,
+                  rotateX: 40,
+                  y: 40,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  rotateX: 0,
+                  y: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.8,
+                  rotateX: 10,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 260,
+                  damping: 15,
+                }}
+              >
+                <CloseIcon />
+                {children}
+              </motion.div>
+            </DialogPrimitive.Content>
           </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </DialogPrimitive.Portal>
   );
 };
 
@@ -175,30 +171,29 @@ export const ModalFooter = ({
 
 const Overlay = ({ className }: { className?: string }) => {
   return (
-    <motion.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-        backdropFilter: "blur(10px)",
-      }}
-      exit={{
-        opacity: 0,
-        backdropFilter: "blur(0px)",
-      }}
-      className={`fixed inset-0 h-full w-full bg-black bg-opacity-50 z-50 ${className}`}
-    ></motion.div>
+    <DialogPrimitive.Overlay asChild>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+          backdropFilter: "blur(10px)",
+        }}
+        exit={{
+          opacity: 0,
+          backdropFilter: "blur(0px)",
+        }}
+        className={cn(
+          "fixed inset-0 h-full w-full bg-black/50 z-50",
+          className
+        )}
+      />
+    </DialogPrimitive.Overlay>
   );
 };
 
 const CloseIcon = () => {
-  const { setOpen } = useModal();
   return (
-    <button
-      onClick={() => setOpen(false)}
-      className="absolute top-4 right-4 group"
-    >
+    <DialogPrimitive.Close className="absolute top-4 right-4 group">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -215,6 +210,6 @@ const CloseIcon = () => {
         <path d="M18 6l-12 12" />
         <path d="M6 6l12 12" />
       </svg>
-    </button>
+    </DialogPrimitive.Close>
   );
 };

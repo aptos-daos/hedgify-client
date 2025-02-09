@@ -5,7 +5,7 @@ export async function swap(
   toToken: string,
   amount: string,
   walletAddress: string
-): Promise<any> {
+): Promise<SwapResponse> {
   // TREASURY WALLET ADDRESS
   const query = {
     fromTokenAddress: fromToken,

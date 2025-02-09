@@ -23,7 +23,7 @@ const SwapInput: React.FC<SwapInputProps> = ({
   coins,
   default_token,
 }) => {
-  const {account} = useWallet();
+  const { account } = useWallet();
   const [balance, setBalance] = useState<number | null>(null);
   const [activeToken, setActiveToken] = useState<Token>(default_token);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +32,7 @@ const SwapInput: React.FC<SwapInputProps> = ({
     if (account && account?.address.length > 0)
       fetchBalance(account.address, activeToken?.tokenAddress)
         .then((balance) => {
-          console.log(balance)
+          console.log(balance);
           setBalance(balance);
         })
         .catch((err) => {
@@ -55,8 +55,7 @@ const SwapInput: React.FC<SwapInputProps> = ({
       <div className="flex justify-between text-sm text-gray-600">
         <span className="select-none text-muted">{getLabel(label)}</span>
         <span className="flex items-center gap-1 text-muted">
-          Wallet Balance:{" "}
-          {balance?.toFixed(2) ?? "0.00"}
+          Wallet Balance: {balance?.toFixed(2) ?? "0.00"}
           {activeToken?.symbol}
         </span>
       </div>

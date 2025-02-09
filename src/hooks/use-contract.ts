@@ -4,10 +4,7 @@ import { type MoveStructId } from "@aptos-labs/ts-sdk";
 import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 import { useToast } from "./use-toast";
 import { DaoData } from "@/validation/dao.validation";
-import {
-  RESOURCES,
-  TYPE_FUN_ARGUMENTS,
-} from "@/constants/contract";
+import { RESOURCES, TYPE_FUN_ARGUMENTS } from "@/constants/contract";
 
 interface IDaoData extends DaoData {
   merkle?: { root: string; proof: string; limit: string };
@@ -111,7 +108,14 @@ const useContract = () => {
     )) as TransactionData;
   };
 
-  return { createDao, joinDaoPublic, joinDaoVip, startTrading, endWhitelist };
+  return {
+    executeTransaction,
+    createDao,
+    joinDaoPublic,
+    joinDaoVip,
+    startTrading,
+    endWhitelist,
+  };
 };
 
 export { useContract };

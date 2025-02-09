@@ -15,7 +15,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 const predefinedAmounts = ["0.5", "1", "2", "5"];
 const values = [
   { label: "Price Impact", value: "1.07%" },
-  { label: "Platform Fees", value: "0.001 APT" },
+  { label: "Slippage", value: "1%" }, // panora api
 ];
 
 interface SwapObject {
@@ -28,7 +28,7 @@ interface Props {
   inputSwap?: boolean;
   fromObj: SwapObject;
   toObj: SwapObject;
-  onClick: () => void;
+  onClick: (from: string, to: string, amount: number) => void;
   footer?: string;
   onChange?: (from: SwapObject, to: SwapObject) => void;
   isActive?: boolean;
@@ -106,6 +106,14 @@ const SwapWidget: React.FC<Props> = ({
     }
   };
 
+  const handleClick = () => {
+    onClick(
+      String(from.active.tokenAddress),
+      String(to.active.tokenAddress),
+      from.amount
+    );
+  }
+
   return (
     <Card>
       <CardHeader
@@ -165,7 +173,7 @@ const SwapWidget: React.FC<Props> = ({
           <Button
             className="w-full bg-primary"
             disabled={!connected || !isActive}
-            onClick={onClick}
+            onClick={handleClick}
           >
             {connected ? "SWAP for the Sake of GOD" : "Please Connect Wallet"}
           </Button>

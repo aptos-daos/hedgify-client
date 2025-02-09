@@ -1,14 +1,15 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TwitterLogo } from "@phosphor-icons/react/dist/ssr";
 
-type InteractiveHoverButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+type InteractiveHoverButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  icon: React.ReactNode;
+};
 
-export const TwitterHoverButton = React.forwardRef<
+export const InteractiveHoverButton = React.forwardRef<
   HTMLButtonElement,
   InteractiveHoverButtonProps
->(({ children, className, ...props }, ref) => {
+>(({ children, className, icon, ...props }, ref) => {
   return (
     <button
       ref={ref}
@@ -19,7 +20,9 @@ export const TwitterHoverButton = React.forwardRef<
       {...props}
     >
       <div className="flex items-center gap-2">
-        <TwitterLogo weight="fill" className="transition-all duration-300 group-hover:scale-[100.8]"/>
+        <div className="transition-all duration-300 group-hover:scale-[100.8]">
+          {icon}
+        </div>
         <span className="inline-block transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0">
           {children}
         </span>
@@ -32,4 +35,4 @@ export const TwitterHoverButton = React.forwardRef<
   );
 });
 
-TwitterHoverButton.displayName = "InteractiveHoverButton";
+InteractiveHoverButton.displayName = "InteractiveHoverButton";

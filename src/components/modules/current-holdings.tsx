@@ -11,13 +11,28 @@ import { useMarketCapital } from "@/store/dao";
 import { formatAddress } from "@/utils/formatters";
 
 const CurrentHoldings: React.FC<DaoData> = (dao) => {
-  const {setMarketCapital} = useMarketCapital();
+  const { setMarketCapital, setLoading } = useMarketCapital();
   const { data, isLoading, error } = useQuery({
     queryKey: ["FungibleAssetBalances", dao.treasuryAddress], // TODO: check it once
     queryFn: async () => {
+      setLoading(true);
+      // TODO: FETCH FROM PANORA AND MATCH THERE BALANCES
       const res = await fetchFungibleAsset(dao.treasuryAddress);
-      console.log(res);
-      return res;
+
+      const mappedRes = res.map((item) => {
+        const amount =
+          Number(item.amount) / Math.pow(10, item.metadata.decimals);
+        return { ...item, amount };
+      });
+
+      const totalMarketCapital = mappedRes.reduce(
+        (acc, item) => acc + item.amount,
+        0
+      );
+      setMarketCapital(totalMarketCapital);
+
+      setLoading(false);
+      return mappedRes;
     },
   });
 

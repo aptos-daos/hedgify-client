@@ -10,8 +10,13 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { toast } from "@/hooks/use-toast";
 import UserAPI from "@/request/auth/user.api";
 import DAOAPI, { DaoSingleResponseType } from "@/request/dao/dao.api";
+import { DaoStatus } from "@/constants";
 
-const SwapWidget: React.FC<DaoData> = (dao) => {
+interface Props extends DaoData {
+  status: DaoStatus;
+}
+
+const TokenSwapWidget: React.FC<Props> = ({ status, ...dao }) => {
   const userApi = new UserAPI();
   const daoApi = new DAOAPI();
   const token = new_token({ symbol: dao.fundTicker });
@@ -53,7 +58,7 @@ const SwapWidget: React.FC<DaoData> = (dao) => {
         setDaoData(idao);
       }
     };
-    
+
     fetchDao();
   }, [connected, dao.isPublic, dao.id, account?.address]);
 
@@ -94,4 +99,4 @@ const SwapWidget: React.FC<DaoData> = (dao) => {
   );
 };
 
-export default SwapWidget;
+export default TokenSwapWidget;

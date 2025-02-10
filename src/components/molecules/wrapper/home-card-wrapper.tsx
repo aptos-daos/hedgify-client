@@ -21,7 +21,7 @@ const HomeCardWrapper = ({
       <BottomTopAnimation className="relative py-4 md:py-6 w-full md:w-fit m-auto">
         <div
           className={cn(
-            "z-100 absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 -translate-y-1/2",
+            "z-40 absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 -translate-y-1/2",
             crown && "-translate-y-3/4"
           )}
         >

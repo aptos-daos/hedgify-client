@@ -64,7 +64,7 @@ export function WalletSelector({ ...walletSortingOptions }: Props) {
       <InteractiveHoverButton
         onClick={handleButtonClick}
         icon={<Wallet weight="fill" size={16} />}
-        className="min-w-48"
+        className="md:min-w-48"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

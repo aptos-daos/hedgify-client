@@ -129,7 +129,7 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
   return (
     <>
       <div
-        className={"flex-1 space-y-2 md:space-y-4 mt-10 min-w-96"}
+        className={"flex-1 space-y-2 md:space-y-4 mt-10 min-w-sm max-w-md"}
         ref={scope}
       >
         <Card className="w-full mx-auto p-6 pace-y-6">

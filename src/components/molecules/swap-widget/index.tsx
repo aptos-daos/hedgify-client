@@ -119,8 +119,8 @@ const SwapWidget: React.FC<Props> = ({
       <CardHeader
         className="flex-row justify-between gap-2 p-5"
       >
-        <Button className="w-full">Buy</Button>
-        <Button className="w-full bg-red-400">Sell</Button>
+        <Button className="w-full">Commit</Button>
+        <Button className="w-full bg-red-400">Withdraw</Button>
       </CardHeader>
       <CardContent className={cn("space-y-4 p-5, pt-0")}>
         <div className="space-y-5">

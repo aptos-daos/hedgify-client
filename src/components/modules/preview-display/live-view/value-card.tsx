@@ -1,7 +1,7 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { AnimatedNumber } from "@/components/ui/animated-number";
-import { Progress } from "@/components/ui/progress";
+import { AnimatedCircularProgressBar } from "@/components/magicui/animated-circular-progress-bar";
 
 interface Props {
   heading: string;
@@ -16,7 +16,15 @@ const ValueCard: React.FC<Props> = ({ heading, value, type = "value" }) => {
   const renderContent = () => {
     switch (type) {
       case "progress":
-        return <Progress value={numericValue} className="mt-3" />;
+        return (
+          <AnimatedCircularProgressBar
+            max={100}
+            min={0}
+            value={35}
+            gaugePrimaryColor="hsl(var(--primary))"
+            gaugeSecondaryColor="hsl(var(--secondary))"
+          />
+        );
 
       case "number":
         return (
@@ -36,9 +44,11 @@ const ValueCard: React.FC<Props> = ({ heading, value, type = "value" }) => {
   };
 
   return (
-    <Card className="p-4 px-5 bg-white/10 text-white">
-      <h1 className="text-sm text-muted">{heading}</h1>
-      {renderContent()}
+    <Card className="text-white">
+      <CardHeader className="p-4">
+        <CardTitle className="text-sm text-muted">{heading}</CardTitle>
+      </CardHeader>
+      <CardContent className="p-4 pt-0 flex items-center justify-center">{renderContent()}</CardContent>
     </Card>
   );
 };

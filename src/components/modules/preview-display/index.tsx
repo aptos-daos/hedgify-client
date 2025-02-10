@@ -1,7 +1,7 @@
 import React from "react";
 import { DaoData } from "@/validation/dao.validation";
 import { ImageCard } from "@/components/molecules/card/image-card";
-import LiveView from "./LiveView";
+import LiveView from "./live-view";
 import { Separate } from "@/components/molecules/separate-layout";
 import { AnimatedSocialTooltip } from "@/components/ui/animated-social-tooltip";
 import { XLogo, TelegramLogo, Planet } from "@phosphor-icons/react/dist/ssr";

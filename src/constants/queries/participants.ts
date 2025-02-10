@@ -22,7 +22,7 @@ export interface GetParticipantsResponse {
 }
 
 export const GET_PARTICIPANTS = gql`
-  query GetDaos($daoAddress: String!) {
+  subscription GetDaos($daoAddress: String!) {
     daos_fun_events_dao_join_events(
       limit: 10
       where: { dao_address: { _eq: $daoAddress } }
@@ -41,6 +41,26 @@ export const GET_PARTICIPANTS = gql`
       transaction_timestamp
       transaction_version
       user
+    }
+  }
+`;
+
+export interface GetParticipantsAggregateResponse {
+  daos_fun_events_dao_join_events_aggregate: {
+    aggregate: {
+      count: number;
+    };
+  };
+}
+
+export const GET_PARTICIPANTS_AGGREGATE = gql`
+  subscription GetParticipantsAggregate($daoAddress: String!) {
+    daos_fun_events_dao_join_events_aggregate(
+      where: { dao_address: { _eq: $daoAddress } }
+    ) {
+      aggregate {
+        count
+      }
     }
   }
 `;

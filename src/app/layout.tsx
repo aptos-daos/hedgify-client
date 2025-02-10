@@ -14,7 +14,8 @@ const mFont = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "DAOs",
+  title: "Mooner Money",
+  description: "Pool Money; Trade Whatever"
 };
 
 export default async function RootLayout({

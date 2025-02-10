@@ -9,15 +9,14 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import getParticipantsIndexer from "@/request/graphql/get_participants";
-import { useQuery } from "@tanstack/react-query";
-import { type Participant } from "@/constants/queries/participants";
+import { useSubscription } from "@apollo/client"
+import { GET_PARTICIPANTS, type Participant } from "@/constants/queries/participants";
 
 const ParticipantsTable = ({ daoAddress }: { daoAddress: string }) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["participants", daoAddress],
-    queryFn: () => getParticipantsIndexer(daoAddress),
+  const { data, loading } = useSubscription(GET_PARTICIPANTS, {
+    variables: {
+      daoAddress,
+    },
   });
 
   const columns: Column<Participant>[] = [
@@ -40,8 +39,6 @@ const ParticipantsTable = ({ daoAddress }: { daoAddress: string }) => {
     },
   ];
 
-  if (error) return <div>Error: {error.message}</div>;
-
   return (
     <Card>
       <CardHeader>
@@ -51,7 +48,7 @@ const ParticipantsTable = ({ daoAddress }: { daoAddress: string }) => {
       <CardContent>
         <DataTable<Participant>
           columns={columns}
-          isLoading={isLoading}
+          isLoading={loading}
           // @ts-ignore
           data={data}
         />

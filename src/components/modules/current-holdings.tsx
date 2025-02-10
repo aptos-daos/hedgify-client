@@ -3,39 +3,13 @@
 import React from "react";
 import DataTable, { type Column } from "@/components/molecules/DataTable";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { fetchFungibleAsset } from "@/lib/wallet";
 import { DaoData } from "@/validation/dao.validation";
-import { useQuery } from "@tanstack/react-query";
 import { type FungibleAssetBalance } from "@/request/graphql/get_token_assets";
-import { useMarketCapital } from "@/store/dao";
 import { formatAddress } from "@/utils/formatters";
+import { useHoldings } from "@/hooks/use-holdings";
 
 const CurrentHoldings: React.FC<DaoData> = (dao) => {
-  const { setMarketCapital, setLoading } = useMarketCapital();
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["FungibleAssetBalances", dao.treasuryAddress], // TODO: check it once
-    queryFn: async () => {
-      setLoading(true);
-      // TODO: FETCH FROM PANORA AND MATCH THERE BALANCES
-      const res = await fetchFungibleAsset(dao.treasuryAddress);
-
-      const mappedRes = res.map((item) => {
-        const amount =
-          Number(item.amount) / Math.pow(10, item.metadata.decimals);
-        return { ...item, amount };
-      });
-
-      const totalMarketCapital = mappedRes.reduce(
-        (acc, item) => acc + item.amount,
-        0
-      );
-      setMarketCapital(totalMarketCapital);
-
-      setLoading(false);
-      return mappedRes;
-    },
-  });
-
+  const { isLoading, error, data } = useHoldings(dao);
   const columns: Column<FungibleAssetBalance>[] = [
     {
       id: "storage_id",

@@ -1,5 +1,5 @@
 {
-  "name": "sales-audit",
+  "name": "mooner-backend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@apollo/client": "^3.12.8",
+    "@apollo/client": "^3.12.9",
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@aptos-labs/wallet-adapter-react": "^3.7.9",
     "@hookform/resolvers": "^3.10.0",
@@ -43,11 +43,11 @@
     "date-fns": "^3.0.1",
     "firebase": "^11.2.0",
     "formik": "^2.4.6",
-    "graphql-ws": "^6.0.3",
+    "framer-motion": "^12.4.2",
+    "graphql-ws": "^5.5.5",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.474.0",
-    "motion": "^12.4.1",
     "next": "15.1.6",
     "next-auth": "^4.24.11",
     "papaparse": "^5.5.2",

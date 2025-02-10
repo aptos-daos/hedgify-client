@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ArrowUpDown } from "lucide-react";
-import { useAnimate, motion } from "motion/react";
+import { useAnimate, motion } from "framer-motion";
 
 interface SwapIconProps {
   onClick?: () => void;

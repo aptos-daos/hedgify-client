@@ -15,12 +15,6 @@ declare module "next-auth" {
 }
 
 const authOptions: AuthOptions = {
-  pages: {
-    signIn: "/auth/signin",
-    signOut: "/auth/signout",
-    error: "/auth/error",
-    verifyRequest: "/auth/verify-request",
-  },
   providers: [
     TwitterProvider({
       clientId: process.env.AUTH_TWITTER_ID as string,
@@ -50,11 +44,6 @@ const authOptions: AuthOptions = {
       }
       return token;
     },
-    async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
-    }
   },
 };
 

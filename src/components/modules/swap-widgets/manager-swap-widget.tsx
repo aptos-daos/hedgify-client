@@ -9,6 +9,7 @@ import { swap } from "@/lib/panora";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { toast } from "@/hooks/use-toast";
 import { useContract } from "@/hooks/use-contract";
+import { RESOURCES } from "@/constants/contract";
 
 const ManagerSwapWidget: React.FC<DaoData> = (dao) => {
   const { tokenList } = useTokenStore();
@@ -48,15 +49,16 @@ const ManagerSwapWidget: React.FC<DaoData> = (dao) => {
       });
       return;
     }
-    const resp = await swap("", "", "", "");
+    // TODO: Add Values
+    const resp = await swap("", "", "0", "");
     const quotes = resp.quotes;
     // TODO: handle response
     const contract_resps = await Promise.all(
       quotes.map((quote) =>
         executeTransaction(
-          // TODO: change function string
-          quote.txData.function,
-          quote.txData.arguments,
+          // TODO: change function string execute_dao_swap_panora
+          RESOURCES.DAO_SWAP_PANORA,
+          [dao.treasuryAddress, 0, ...quote.txData.arguments], // TODO: ADD DECIMAL AMOUNT
           quote.txData.type_arguments
         )
       )

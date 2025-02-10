@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";

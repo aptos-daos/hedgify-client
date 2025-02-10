@@ -54,6 +54,7 @@ export const RESOURCES: IResources = {
   WITHDRAW_COMPLETION: `${MODULE_ADDRESS}::${MODULE_NAME}::withdraw_dao_completion`,
   CREATE_STORE: `${MODULE_ADDRESS}::${MODULE_NAME}::create_store`,
   END_WHITELIST: `${MODULE_ADDRESS}::${MODULE_NAME}::end_whitelist`,
+  DAO_SWAP_PANORA: `${MODULE_ADDRESS}::${MODULE_NAME}::execute_dao_swap_panora`,
 };
 
 export const TYPE_FUN_ARGUMENTS = {

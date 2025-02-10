@@ -70,6 +70,7 @@ export const TYPE_FUN_ARGUMENTS = {
     getSecondsTime(dao.fundingStarts),
     dao.tradingPeriod * 24 * 60 * 60, // IN SECONDS
     dao.merkle?.root || [],
+    getSecondsTime(dao.whitelistEnds),
     dao.publicLimit,
     dao.profits,
   ],

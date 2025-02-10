@@ -17,6 +17,7 @@ import {
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import { CSVRow, getWhitelistArray } from "@/utils/csv";
+import { addDays } from "date-fns";
 
 interface IData extends DaoFormData {
   whitelist: CSVRow[];
@@ -58,6 +59,7 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       telegramGroup: "",
       website: "",
       fundingStarts: new Date(),
+      whitelistEnds: addDays(new Date(), 30),
       indexFund: 0,
       profits: 0,
       poster: "",
@@ -171,6 +173,12 @@ const DAOForm: React.FC<Props> = ({ address, onSubmit }) => {
       />
 
       <FileUpload onChange={handleFileChange} />
+      <FormInput
+        name="whitelistEnds"
+        type="date"
+        placeholder="Enter the date When Whitelist Ends"
+        formik={formik}
+      />
 
       <Button
         type="submit"

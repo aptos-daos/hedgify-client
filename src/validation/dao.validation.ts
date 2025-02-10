@@ -1,4 +1,5 @@
 import { AVAILABLE_PERIOD_OF_TRADING } from "@/constants";
+import { addDays } from "date-fns";
 import { z } from "zod";
 
 const dateSchema = z
@@ -61,6 +62,7 @@ export const daoFormSchema = z.object({
   website: z.string().url().optional().default(""),
 
   fundingStarts: dateSchema.optional().default(new Date()),
+  whitelistEnds: dateSchema.optional().default(addDays(new Date(), 30)),
   tradingPeriod: z
     .union([
       z.string()

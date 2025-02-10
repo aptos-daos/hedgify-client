@@ -15,11 +15,12 @@ interface Props extends DaoData {
   children?: React.ReactNode;
   className?: string;
   descriptionView?: boolean;
+  url: "funds" | "dashboard"
 }
 
-export function DaoCardLong({ id, title, description, poster }: Props) {
+export function DaoCardLong({ id, title, description, poster, url }: Props) {
   return (
-    <Link href={`/${id}`}>
+    <Link href={`${url}/${id}`}>
       <BottomTopAnimation>
         <Card className="p-2">
           <CardHeader hidden></CardHeader>

@@ -27,7 +27,7 @@ const HomeCardWrapper = ({
         >
           {crown && <Crown className="text-primary" size={20} />}
           <div className="p-1.5 md:p-2 px-3 md:px-4 bg-primary w-fit rounded-full">
-            <h2 className="text-sm md:text-xs font-bold tracking-widest text-primary-foreground">
+            <h2 className="text-xs md:text-xs font-bold tracking-widest text-primary-foreground">
               {title.toLocaleUpperCase()}
             </h2>
           </div>

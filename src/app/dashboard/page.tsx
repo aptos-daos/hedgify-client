@@ -42,9 +42,11 @@ const Dashboard = () => {
   return (
     <main>
       {isAdmin && <DashboardAdmin />}
-      {daos?.map((dao) => (
-        <DaoCardLong key={dao.id} {...dao} />
-      ))}
+      <div className="space-y-2">
+        {daos?.map((dao) => (
+          <DaoCardLong key={dao.id} {...dao} url="dashboard" />
+        ))}
+      </div>
     </main>
   );
 };

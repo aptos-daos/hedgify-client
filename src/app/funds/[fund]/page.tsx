@@ -30,6 +30,11 @@ export default async function Page({
   }
 
   const indexer_dao = await getDAODetailsIndexer(dao.treasuryAddress);
+
+  if (!indexer_dao) {
+    return notFound();
+  }
+
   const totalFunding = await getTotalFunding(dao.treasuryAddress);
   const dao_status = getLiveStatus({
     ...dao,

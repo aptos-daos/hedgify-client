@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { WalletRowItemProps } from "./wallet.d";
 import { motion } from "framer-motion";
 
-export default function WalletRowItem({ wallet, isAptosConnect = false }: WalletRowItemProps) {
+export default function WalletRowItem({
+  wallet,
+  isAptosConnect = false,
+  onConnect,
+}: WalletRowItemProps) {
   const isInstallRequired = () => false;
 
   const buttonVariants = {
@@ -62,10 +66,7 @@ export default function WalletRowItem({ wallet, isAptosConnect = false }: Wallet
             <WalletItem.Name className="font-medium text-foreground" />
           </div>
           {isAptosConnect && (
-            <motion.div
-              whileHover={{ x: 5 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
               <ArrowRight className="size-5 text-foreground" />
             </motion.div>
           )}
@@ -75,7 +76,7 @@ export default function WalletRowItem({ wallet, isAptosConnect = false }: Wallet
   );
 
   return (
-    <WalletItem wallet={wallet}>
+    <WalletItem wallet={wallet} onConnect={onConnect}>
       {isInstallRequired() ? renderInstallButton() : renderConnectButton()}
     </WalletItem>
   );

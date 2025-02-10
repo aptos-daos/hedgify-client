@@ -37,7 +37,7 @@ const DaoCardList = ({ title, daos }: Props) => {
 
       <div className={`${commonClasses} ${mobileClasses}`}>
         {daos.map((fund) => (
-          <DaoCardLong {...fund} key={fund.id} />
+          <DaoCardLong {...fund} key={fund.id} url="funds" />
         ))}
       </div>
     </HomeCardWrapper>

@@ -20,7 +20,7 @@ const ValueCard: React.FC<Props> = ({ heading, value, type = "value" }) => {
           <AnimatedCircularProgressBar
             max={100}
             min={0}
-            value={35}
+            value={numericValue}
             gaugePrimaryColor="hsl(var(--primary))"
             gaugeSecondaryColor="hsl(var(--secondary))"
           />

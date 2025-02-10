@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import {
   useWallet,
   WalletSortingOptions,
@@ -14,24 +14,36 @@ import { Modal, ModalBody, ModalContent } from "@/components/ui/animated-modal";
 import WalletRowItem from "./WalletRowItem";
 import { AnimatePresence, motion } from "framer-motion";
 import { InteractiveHoverButton } from "../magicui/interactive-hover-button";
+import { useToast } from "@/hooks/use-toast";
 
 interface Props extends WalletSortingOptions {
   secure?: boolean;
 }
 
 export function WalletSelector({ ...walletSortingOptions }: Props) {
+  const { toast } = useToast();
   const { account, connected, disconnect, wallets = [] } = useWallet();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [moreView, setMoreView] = useState(false);
   const [text, setText] = useState("Sign Out");
 
-  const filteredWallets = useMemo(() => 
-    wallets.filter((w) => ["Petra", "Martian", "Continue with Google"].includes(w.name)),
+  // Add effect to update text when account changes
+  useEffect(() => {
+    if (connected && account) {
+      setText(account.ansName || truncateAddress(account.address) || "Unknown");
+    }
+  }, [connected, account]);
+
+  const filteredWallets = useMemo(
+    () =>
+      wallets.filter((w) =>
+        ["Petra", "Martian", "Continue with Google"].includes(w.name)
+      ),
     [wallets]
   );
 
-  const { aptosConnectWallets, availableWallets, installableWallets } = useMemo(() => 
-    groupAndSortWallets(filteredWallets, walletSortingOptions),
+  const { aptosConnectWallets, availableWallets, installableWallets } = useMemo(
+    () => groupAndSortWallets(filteredWallets, walletSortingOptions),
     [filteredWallets, walletSortingOptions]
   );
 
@@ -41,7 +53,6 @@ export function WalletSelector({ ...walletSortingOptions }: Props) {
     } else {
       setIsModalOpen(true);
     }
-
   }, [connected, disconnect]);
 
   const handleModalClose = useCallback((val: boolean) => {
@@ -50,15 +61,21 @@ export function WalletSelector({ ...walletSortingOptions }: Props) {
   }, []);
 
   const handleMouseEnter = useCallback(() => setText("Sign Out"), []);
-  
-  const handleMouseLeave = useCallback(() => 
-    setText(account?.ansName || truncateAddress(account?.address) || "Unknown"),
+
+  const handleMouseLeave = useCallback(
+    () =>
+      setText(
+        account?.ansName || truncateAddress(account?.address) || "Unknown"
+      ),
     [account]
   );
 
   const handleMoreView = useCallback(() => setMoreView(true), []);
   const handleBackView = useCallback(() => setMoreView(false), []);
-
+  const onConnect = useCallback(() => {
+    toast({ title: "Connecting..." });
+    setIsModalOpen(false);
+  }, []);
   return (
     <>
       <InteractiveHoverButton
@@ -90,7 +107,11 @@ export function WalletSelector({ ...walletSortingOptions }: Props) {
                     <ChevronLeft className="w-4 h-4" /> Go Back
                   </Button>
                   {installableWallets.map((wallet, index) => (
-                    <WalletRowItem key={`installable-${wallet.name}-${index}`} wallet={wallet} />
+                    <WalletRowItem
+                      key={`installable-${wallet.name}-${index}`}
+                      wallet={wallet}
+                      onConnect={onConnect}
+                    />
                   ))}
                 </motion.div>
               ) : (
@@ -106,11 +127,16 @@ export function WalletSelector({ ...walletSortingOptions }: Props) {
                       <WalletRowItem
                         key={`aptos-${wallet.name}-${index}`}
                         wallet={wallet}
+                        onConnect={onConnect}
                         isAptosConnect
                       />
                     ))}
                   {availableWallets.map((wallet, index) => (
-                    <WalletRowItem key={`available-${wallet.name}-${index}`} wallet={wallet} />
+                    <WalletRowItem
+                      key={`available-${wallet.name}-${index}`}
+                      wallet={wallet}
+                      onConnect={onConnect}
+                    />
                   ))}
                   {!!installableWallets.length && (
                     <Button

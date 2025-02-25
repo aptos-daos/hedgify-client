@@ -43,6 +43,10 @@ type IArguments = {
   [key in (typeof functions)[number]]: string[];
 };
 
+export const VIEW: IResources = {
+  GET_DAO_DETAILS: `${MODULE_ADDRESS}::${MODULE_NAME}::create_dao`,
+};
+
 export const RESOURCES: IResources = {
   CREATE_DAO: `${MODULE_ADDRESS}::${MODULE_NAME}::create_dao`,
   START_TREADING: `${MODULE_ADDRESS}::${MODULE_NAME}::start_trading`,

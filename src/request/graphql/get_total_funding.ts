@@ -1,7 +1,7 @@
 import { indexerClient } from "@/lib/graphql";
 import { GET_TOTAL_INVESTED } from "@/constants/queries/invested";
 
-export const getTotalFunding = async (treasuryAddress: string) => {
+export const  getTotalFunding = async (treasuryAddress: string) => {
   try {
     return 35;
   //   const result = await indexerClient.query({

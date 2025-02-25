@@ -14,6 +14,10 @@ import {
   TradingLiveSwapWidget,
   TokenSwapWidget,
 } from "@/components/modules/swap-widgets";
+import { addDays } from "date-fns";
+import aptos from "@/lib/aptos";
+import { VIEW } from "@/constants/contract";
+import view from "@/request/contract/view";
 
 export default async function Page({
   params,
@@ -29,6 +33,14 @@ export default async function Page({
     return notFound();
   }
 
+  // const dao_details = (
+  //   await aptos.view({ payload: { function: VIEW.GET_DAO_DETAILS } })
+  // )[0];
+
+  const dao_details = await view({payload:{function: VIEW.GET_DAO_DETAILS}})
+
+  console.log(dao_details);
+
   const indexer_dao = await getDAODetailsIndexer(dao.treasuryAddress);
 
   if (!indexer_dao) {
@@ -36,11 +48,16 @@ export default async function Page({
   }
 
   const totalFunding = await getTotalFunding(dao.treasuryAddress);
+
   const dao_status = getLiveStatus({
     ...dao,
     totalFunding,
-    tradingStarts: new Date(indexer_dao.trading_start_time * 1000),
-    tradingEnds: new Date(indexer_dao.trading_end_time * 1000),
+    tradingStarts: indexer_dao.trading_start_time
+      ? new Date(indexer_dao.trading_start_time)
+      : new Date(dao.createdAt),
+    tradingEnds: indexer_dao.trading_start_time
+      ? new Date(indexer_dao.trading_end_time)
+      : new Date(addDays(dao.createdAt, dao.tradingPeriod)),
   });
 
   return (

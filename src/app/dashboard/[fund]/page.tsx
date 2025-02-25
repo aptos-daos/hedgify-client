@@ -9,6 +9,7 @@ import CurrentHoldings from "@/components/modules/current-holdings";
 import AdminController from "@/components/modules/admin-controller";
 import MarketCapital from "@/components/modules/market-capital";
 import { DaoStatus } from "@/constants";
+import { addDays } from "date-fns";
 
 export default async function Page({
   params,
@@ -28,20 +29,24 @@ export default async function Page({
   const dao_status = getLiveStatus({
     ...dao,
     totalFunding,
-    tradingStarts: new Date(indexer_dao.trading_start_time),
-    tradingEnds: new Date(indexer_dao.trading_end_time),
+    tradingStarts: indexer_dao.trading_start_time
+      ? new Date(indexer_dao.trading_start_time)
+      : new Date(dao.createdAt),
+    tradingEnds: indexer_dao.trading_start_time
+      ? new Date(indexer_dao.trading_end_time)
+      : new Date(addDays(dao.createdAt, dao.tradingPeriod)),
   });
 
-  // if (
-  //   dao_status === DaoStatus.FUNDING_LIVE ||
-  //   dao_status === DaoStatus.NOT_STARTED
-  // ) {
-  //   return (
-  //     <main>
-  //       <AdminController {...dao} />
-  //     </main>
-  //   );
-  // }
+  if (
+    dao_status === DaoStatus.FUNDING_LIVE ||
+    dao_status === DaoStatus.NOT_STARTED
+  ) {
+    return (
+      <main>
+        <AdminController {...dao} />
+      </main>
+    );
+  }
 
   return (
     <main>

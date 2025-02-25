@@ -1,6 +1,6 @@
 import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 
-const getNetwork = () => {
+export const getNetwork = () => {
   let network = "devnet";
   if (process.env.NEXT_PUBLIC_APTOS_NETWORK !== undefined) {
     network = process.env.NEXT_PUBLIC_APTOS_NETWORK;

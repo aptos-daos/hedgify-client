@@ -57,8 +57,10 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
     onSubmit: async (values) => {
       const v = await inviteApi.validateInvite(values.inviteCode);
       setVerified(v);
-      if (v) setInvite(values.inviteCode);
-      animate(scope.current, { marginTop: 0 });
+      if (v) {
+        setInvite(values.inviteCode);
+        animate(scope.current, { marginTop: 0 });
+      }
     },
   });
 

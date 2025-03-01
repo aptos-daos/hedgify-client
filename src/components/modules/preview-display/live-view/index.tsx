@@ -6,6 +6,7 @@ import TwitterCard from "./twitter-card";
 import MarketCapital from "../../market-capital";
 import Partners from "./partners";
 import Returns from "./returns";
+import AUM from "./aum";
 
 interface Props extends DaoData {
   status: DaoStatus;
@@ -21,11 +22,11 @@ const LiveView: React.FC<Props> = ({ status, ...dao }) => {
       case LiveViewType.MARKET_CAPITAL:
         return <MarketCapital />;
       case LiveViewType.AUM:
-        return <GoalProgress treasuryAddress={dao.treasuryAddress} />;
+        return <AUM daoAddress={dao.treasuryAddress}/>;
       case LiveViewType.PARTNERS:
         return <Partners daoAddress={dao.treasuryAddress} />;
       case LiveViewType.RETURNS:
-        return <Returns />;
+        return <Returns daoAddress={dao.treasuryAddress} />;
       default:
         return null;
     }

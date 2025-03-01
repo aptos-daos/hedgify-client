@@ -51,6 +51,8 @@ const Screener = ({
     return `${baseUrl}${pairAddress}?${params.toString()}`;
   };
 
+  console.log(buildUrl())
+
   return (
     <div className="relative w-full pb-[125%] lg:pb-[65%]">
       <iframe

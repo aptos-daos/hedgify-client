@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useContract } from "@/hooks/use-contract";
+import CustomSwitch from "@/components/molecules/custom-switch";
 
 const AdminController: React.FC<DaoData> = (dao) => {
   const [whitelist, setWhitelist] = useState<CSVRow[]>([]);
@@ -32,13 +33,12 @@ const AdminController: React.FC<DaoData> = (dao) => {
         <CardTitle className="text-white">Admin</CardTitle>
       </CardHeader>
       <CardContent className="text-white space-y-2">
-        <div className="flex justify-between items-center bg-white/10 rounded-lg p-5">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-primary">Public Stage</h3>
-            <Label>Disable VIP Stage</Label>
-          </div>
-          <Switch checked={active} onCheckedChange={handleToggle} />
-        </div>
+        <CustomSwitch
+          heading="Disable VIP Stage"
+          label="Public Stage"
+          active={active}
+          onToggle={handleToggle}
+        />
 
         <FileUpload onChange={handleFileChange} />
       </CardContent>

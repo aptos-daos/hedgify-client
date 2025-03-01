@@ -12,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AnimatePresence, motion } from "framer-motion";
+import CustomSwitch from "@/components/molecules/custom-switch";
 
 interface BaseFormProps {
   name: string;
@@ -47,8 +49,21 @@ const FormField: React.FC<{ formik: any; name: string }> = ({
     [formik.errors[name], formik.touched[name], name]
   );
 
-  if (!hasError) return null;
-  return <p className="text-red-500 text-sm">{String(formik.errors[name])}</p>;
+  return (
+    <AnimatePresence mode="wait">
+      {hasError && (
+        <motion.p
+          className="text-red-500 text-sm"
+          initial={{ opacity: 0, y: -10, height: 0 }}
+          animate={{ opacity: 1, y: 0, height: "auto" }}
+          exit={{ opacity: 0, y: -10, height: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {String(formik.errors[name])}
+        </motion.p>
+      )}
+    </AnimatePresence>
+  );
 };
 
 const FormWrapper: React.FC<{ children: React.ReactNode } & BaseFormProps> = ({
@@ -60,13 +75,18 @@ const FormWrapper: React.FC<{ children: React.ReactNode } & BaseFormProps> = ({
   const displayLabel = useMemo(() => label ?? getLabel(name), [label, name]);
 
   return (
-    <div className="space-y-2">
+    <motion.div
+      className="space-y-2"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+    >
       <Label htmlFor={name} className="text-muted">
         {displayLabel}
         {required && <span className="text-red-500">*</span>}
       </Label>
       {children}
-    </div>
+    </motion.div>
   );
 };
 
@@ -179,4 +199,26 @@ const FormSelect: React.FC<FormSelectProps> = ({
   );
 };
 
-export { FormInput, FormSelect };
+const FormSwitch: React.FC<{
+  name: string;
+  heading: string;
+  label: string;
+  formik: any;
+  required?: boolean;
+}> = ({ name, heading, label, formik, required = true }) => {
+  return (
+    <FormWrapper name={name} label={label} required={required}>
+      <CustomSwitch
+        heading={heading}
+        label={label}
+        active={formik.values[name]}
+        onToggle={(checked) => formik.setFieldValue(name, checked)}
+      />
+      <FormField formik={formik} name={name} />
+    </FormWrapper>
+  );
+};
+
+
+
+export { FormInput, FormSelect, FormSwitch };

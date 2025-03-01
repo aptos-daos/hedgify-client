@@ -32,6 +32,8 @@ interface Props {
   footer?: string;
   onChange?: (from: SwapObject, to: SwapObject) => void;
   isActive?: boolean;
+  commitOff?: boolean;
+  withdrawOff?: boolean;
 }
 
 const SwapWidget: React.FC<Props> = ({
@@ -41,7 +43,9 @@ const SwapWidget: React.FC<Props> = ({
   footer,
   inputSwap = false,
   onChange,
-  isActive  = false
+  isActive = false,
+  commitOff = false,
+  withdrawOff = false,
 }) => {
   const { connected } = useWallet();
   const [from, setFrom] = useState<SwapObject>(fromObj);
@@ -112,24 +116,25 @@ const SwapWidget: React.FC<Props> = ({
       String(to.active.tokenAddress),
       from.amount
     );
-  }
+  };
 
   return (
     <Card>
-      <CardHeader
-        className="flex-row justify-between gap-2 p-5"
-      >
-        <Button className="w-full">Commit</Button>
-        <Button className="w-full bg-red-400">Withdraw</Button>
+      <CardHeader className="flex-row justify-between gap-2 p-5">
+        <Button className="w-full font-bold" disabled={commitOff}>
+          Commit
+        </Button>
+        <Button className="w-full font-bold" disabled={withdrawOff} variant="destructive">
+          Withdraw
+        </Button>
       </CardHeader>
       <CardContent className={cn("space-y-4 p-5, pt-0")}>
         <div className="space-y-5">
-          {/* Predefined Amounts */}
           <div className="grid grid-cols-4 gap-2">
             {predefinedAmounts.map((amount) => (
               <Button
                 key={amount}
-                className="w-full bg-white hover:bg-muted cursor-pointer"
+                className="w-full bg-white hover:bg-muted cursor-pointer font-bold"
                 onClick={() => handleChangeAmount(amount)}
               >
                 {`${amount} ${from.active.symbol}`}
@@ -137,7 +142,7 @@ const SwapWidget: React.FC<Props> = ({
             ))}
           </div>
 
-          {(
+          {
             <SwapInput
               label="from"
               value={from.amount}
@@ -146,7 +151,7 @@ const SwapWidget: React.FC<Props> = ({
               onChange={(value) => handleInputChange(value, "from")}
               onTokenChange={(token) => handleTokenChange(token, "from")}
             />
-          )}
+          }
           {inputSwap && <SwapIcon onClick={handleSwapButtonClick} />}
           {to && (
             <SwapInput
@@ -158,29 +163,26 @@ const SwapWidget: React.FC<Props> = ({
               onTokenChange={(token) => handleTokenChange(token, "to")}
             />
           )}
-
-          {/* Price Impact & Fees */}
-          <div className="space-y-2 text-sm">
-            {values.map((item, index) => (
-              <div key={index} className="flex justify-between text-muted">
-                <span>{item.label}:</span>
-                <span>{item.value}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Swap Button */}
-          <Button
-            className="w-full bg-primary"
-            disabled={!connected || !isActive}
-            onClick={handleClick}
-          >
-            {connected ? "SWAP for the Sake of GOD" : "Please Connect Wallet"}
-          </Button>
         </div>
       </CardContent>
-      <CardFooter hidden>
-        <div>{footer}</div>
+      <CardFooter className="flex-col text-sm space-y-2">
+        <div className="text-sm flex flex-col gap-2 justify-between w-full">
+          {values.map((item, index) => (
+            <div key={index} className="flex justify-between text-muted">
+              <span>{item.label}:</span>
+              <span>{item.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Swap Button */}
+        <Button
+          className="w-full bg-primary font-bold"
+          disabled={!connected || !isActive}
+          onClick={handleClick}
+        >
+          {connected ? "SWAP for the Sake of GOD" : "Please Connect Wallet"}
+        </Button>
       </CardFooter>
     </Card>
   );

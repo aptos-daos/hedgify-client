@@ -1,9 +1,11 @@
-import React from 'react'
+"use client";
 
-const Returns = () => {
-  return (
-    <div>Returns</div>
-  )
-}
+import React from "react";
+import ValueCard from "./value-card";
 
-export default Returns
+const Returns = ({ daoAddress }: { daoAddress: string }) => {
+
+  return <ValueCard heading="Returns" value={"98%"} type="value" />;
+};
+
+export default Returns;

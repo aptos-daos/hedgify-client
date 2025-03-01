@@ -7,6 +7,7 @@ import DaoCardList from "./dao-card-list";
 import { FUNDING_PERIOD } from "@/constants";
 import DAOAPI from "@/request/dao/dao.api";
 import { useQuery } from "@tanstack/react-query";
+import TopCard from "./top-card";
 
 const HomeCards: React.FC = () => {
   const daoApi = new DAOAPI();
@@ -33,11 +34,12 @@ const HomeCards: React.FC = () => {
     }) ?? [];
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-3xl text-center">Error loading data</div>;
   }
 
   return (
     <>
+      <TopCard />
       <DaoCardList
         title="Featured Funds"
         daos={featuredFunds}

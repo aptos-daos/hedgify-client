@@ -62,3 +62,31 @@ interface Invite {
   user: string;
   expiresAt: string;
 }
+
+interface DaoContract {
+  creator_address: string;
+  dao_coin: {
+    inner: string;
+  };
+  dao_coin_uri: string;
+  dao_description: string;
+  dao_investment_coin: {
+    inner: string;
+  };
+  dao_name: string;
+  dao_object_address: string;
+  dao_twitter_uri: string;
+  dao_website_uri: string;
+  max_raise: string;
+  partners: string;
+  pool_created: boolean;
+  profits_to_manager: string;
+  public_round_wallet_limit: string;
+  raise_end_time: string;
+  raise_start_time: string;
+  total_raised: string;
+  trading_end_time: string;
+  trading_start_time: string;
+  whitelist_end_time: string;
+  whitelist_merkle_root: string;
+};

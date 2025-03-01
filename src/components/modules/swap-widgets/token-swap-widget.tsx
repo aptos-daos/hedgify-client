@@ -94,7 +94,11 @@ const TokenSwapWidget: React.FC<Props> = ({ status, ...dao }) => {
       toObj={state.to}
       onClick={handleClick}
       onChange={(value) => setAmount(value.amount)}
-      isActive={dao.isPublic || !daoData.merkle}
+      isActive={
+        status !== DaoStatus.NOT_STARTED && (dao.isPublic || !daoData.merkle)
+      }
+      commitOff={status === DaoStatus.NOT_SUCCESSFUL}
+      withdrawOff={status === DaoStatus.FUNDING_LIVE}
     />
   );
 };

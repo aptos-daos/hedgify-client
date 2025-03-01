@@ -35,14 +35,15 @@ export function ImageCard({
           fill
         />
       </div>
-      <Badge className="text-black text-xs px-1.5">
+      <span className="text-xs text-primary font-extrabold">
         Index Fund: {indexFund.toLocaleString()}
-      </Badge>
-      <CardTitle className="text-white text-[14px]">
+      </span>
+
+      <CardTitle className="text-white text-2xl font-bold">
         {title}
       </CardTitle>
       {descriptionView && (
-        <CardDescription className="line-clamp-1 max-w-52">
+        <CardDescription className="line-clamp-2 max-w-52">
           {description}
         </CardDescription>
       )}

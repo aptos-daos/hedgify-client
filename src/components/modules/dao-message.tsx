@@ -47,7 +47,7 @@ const DaoMessage = ({ status, tradingStarts, tradingEnds }: Props) => {
   }, [status, tradingStarts, tradingEnds]);
 
   return (
-    <div className="w-full p-1.5 px-3 text-xs bg-white/5 border border-primary/80 rounded-lg text-center">
+    <div className="w-full p-4 px-3 font-semibold bg-white/5 border border-primary/80 rounded-lg text-center">
       {messages[status](timestr)}
     </div>
   );

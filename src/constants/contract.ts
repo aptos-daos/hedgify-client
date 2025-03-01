@@ -44,7 +44,7 @@ type IArguments = {
 };
 
 export const VIEW: IResources = {
-  GET_DAO_DETAILS: `${MODULE_ADDRESS}::${MODULE_NAME}::create_dao`,
+  GET_DAO_DETAILS: `${MODULE_ADDRESS}::${MODULE_NAME}::get_dao_config`,
 };
 
 export const RESOURCES: IResources = {

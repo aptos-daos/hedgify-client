@@ -38,11 +38,15 @@ const useContract = () => {
     };
 
     try {
+      toast({ title: "Please Sign the Transaction" });
       const response = await signAndSubmitTransaction(transaction);
+
+      toast({ title: "Transaction Processing..." });
       const trx = await aptos.waitForTransaction({
         transactionHash: response.hash,
       });
 
+      toast({ title: "Transaction Success" });
       if (trx.success) {
         console.log("trx complete", trx);
         onSuccess?.();

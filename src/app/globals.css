@@ -88,14 +88,14 @@
 
 @layer base {
   :root {
-    --background: 0 0% 8%;
-    --foreground: 105 100% 80%;
+    --background: 188, 65%, 12%;
+    --foreground: 187, 53%, 82%;
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
-    --primary: 105 100% 80%;
-    --primary-foreground: 0 0% 8%;
+    --primary: 187, 53%, 82%;
+    --primary-foreground: 188, 65%, 12%;
     --secondary: 60 4.8% 95.9%;
     --secondary-foreground: 24 9.8% 10%;
     --muted: 60 4.8% 95.9%;

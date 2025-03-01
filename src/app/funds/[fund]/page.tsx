@@ -1,23 +1,16 @@
 import Chats from "@/components/modules/chats";
-import DaoMessage from "@/components/modules/dao-message";
 import PreviewDisplay from "@/components/modules/preview-display";
 import { Separate } from "@/components/molecules/separate-layout";
-import DAOAPI from "@/request/dao/dao.api";
 import { notFound } from "next/navigation";
 import Screener from "@/components/modules/screener";
-import getDAODetailsIndexer from "@/request/graphql/get_daos";
-import { getTotalFunding } from "@/request/graphql/get_total_funding";
-import { getLiveStatus } from "@/utils/dao";
 import { TRADING_SWAP_ARR, FUNDING_SWAP_ARR } from "@/constants";
 import FundsTabs from "@/components/modules/funds";
 import {
   TradingLiveSwapWidget,
   TokenSwapWidget,
 } from "@/components/modules/swap-widgets";
-import { addDays } from "date-fns";
-import aptos from "@/lib/aptos";
-import { VIEW } from "@/constants/contract";
-import view from "@/request/contract/view";
+import DaoMessage from "@/components/modules/dao-message";
+import { getDaoDetails } from "@/utils/dao";
 
 export default async function Page({
   params,
@@ -25,47 +18,19 @@ export default async function Page({
   params: Promise<{ fund: string }>;
 }) {
   const fundId = (await params).fund;
-  const api = new DAOAPI();
+  const { status, dao_status, dao, tradingStarts, tradingEnds } =
+    await getDaoDetails(fundId);
 
-  const dao = await api.getSingleDAO(fundId);
-
-  if (!dao) {
+  if (status !== 200 || !dao_status || !dao) {
     return notFound();
   }
-
-  // const dao_details = (
-  //   await aptos.view({ payload: { function: VIEW.GET_DAO_DETAILS } })
-  // )[0];
-
-  const dao_details = await view({payload:{function: VIEW.GET_DAO_DETAILS}})
-
-  console.log(dao_details);
-
-  const indexer_dao = await getDAODetailsIndexer(dao.treasuryAddress);
-
-  if (!indexer_dao) {
-    return notFound();
-  }
-
-  const totalFunding = await getTotalFunding(dao.treasuryAddress);
-
-  const dao_status = getLiveStatus({
-    ...dao,
-    totalFunding,
-    tradingStarts: indexer_dao.trading_start_time
-      ? new Date(indexer_dao.trading_start_time)
-      : new Date(dao.createdAt),
-    tradingEnds: indexer_dao.trading_start_time
-      ? new Date(indexer_dao.trading_end_time)
-      : new Date(addDays(dao.createdAt, dao.tradingPeriod)),
-  });
 
   return (
     <main>
       <DaoMessage
         status={dao_status}
-        tradingStarts={new Date(indexer_dao.trading_start_time * 1000)}
-        tradingEnds={new Date(indexer_dao.trading_end_time * 1000)}
+        tradingStarts={tradingStarts}
+        tradingEnds={tradingEnds}
         {...dao}
       />
 
@@ -83,7 +48,7 @@ export default async function Page({
           {TRADING_SWAP_ARR.includes(dao_status) && (
             <>
               <TradingLiveSwapWidget {...dao} />
-              <Screener />
+              <Screener pairAddress={dao.daoCoinAddress}/>
             </>
           )}
         </Separate.Layout>

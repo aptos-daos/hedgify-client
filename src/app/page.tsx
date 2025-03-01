@@ -7,7 +7,7 @@ const Home: React.FC = () => {
 
   return (
     <main className="pt-20 space-y-4">
-      <section className="space-y-2 text-center">
+      <section className="space-y-2 text-center pb-6">
         <h1 className="font-extrabold">Pool Money.</h1>
         <h1 className="font-extrabold">
           Trade

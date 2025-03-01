@@ -1,12 +1,10 @@
-import { useHoldings } from '@/hooks/use-holdings'
-import { DaoData } from '@/validation/dao.validation'
-import React from 'react'
+"use client";
 
-const AUM = (dao: DaoData) => {
-    const {}  = useHoldings(dao)
-  return (
-    <div>AUM</div>
-  )
-}
+import React from "react";
+import ValueCard from "./value-card";
 
-export default AUM
+const AUM = ({ daoAddress }: { daoAddress: string }) => {
+  return <ValueCard heading="AUM" value={"$1.2M"} type="value" />;
+};
+
+export default AUM;

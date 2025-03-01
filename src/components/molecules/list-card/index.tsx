@@ -32,7 +32,7 @@ const ListCard: React.FC<Props> = ({ title, subtitle, items }) => {
           >
             <span className="">{field.label}</span>
             {field.badge ? (
-              <Badge variant="secondary">{field.value}</Badge>
+              <span className="text-sm">{field.value}</span>
             ) : (
               <Copy copyable={field.copyable || false} content={field.value} className="text-right text-xs" />
             )}

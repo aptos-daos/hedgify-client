@@ -9,10 +9,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "raw.githubusercontent.com",
       },
-      // {
-      //   protocol: "https",
-      //   hostname: "storage.googleapis.com",
-      // },
+      {
+        protocol: "https",
+        hostname: "storage.googleapis.com",
+      },
       {
         protocol: "https",
         hostname: "pbs.twimg.com",

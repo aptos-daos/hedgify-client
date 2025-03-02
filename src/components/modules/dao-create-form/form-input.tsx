@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import DatePicker from "@/components/molecules/DatePicker";
+import DatePicker from "@/components/molecules/date-picker";
 import { getLabel } from "@/utils/formatters";
 import {
   Select,

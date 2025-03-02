@@ -77,6 +77,9 @@ export const TYPE_FUN_ARGUMENTS = {
     getSecondsTime(dao.whitelistEnds),
     dao.publicLimit,
     dao.profits,
+    [],
+    "uhferfer",
+    getSecondsTime(new Date())
   ],
   JOIN_VIP: (dao: IData, amount: number) => [
     dao.treasuryAddress,

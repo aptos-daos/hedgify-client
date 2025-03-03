@@ -17,9 +17,9 @@ export default async function Page({
   const { status, dao_status, dao, tradingStarts, tradingEnds } =
     await getDaoDetails(fundId);
 
-  if(status !== 200 || !dao_status || !dao) {
+  if (status !== 200 || !dao_status || !dao) {
     return notFound();
-  } 
+  }
 
   if (
     dao_status === DaoStatus.FUNDING_LIVE ||
@@ -27,6 +27,12 @@ export default async function Page({
   ) {
     return (
       <main>
+        <DaoMessage
+          status={dao_status}
+          tradingStarts={tradingStarts}
+          tradingEnds={tradingEnds}
+          {...dao}
+        />
         <AdminController {...dao} />
       </main>
     );

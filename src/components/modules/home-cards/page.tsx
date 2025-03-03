@@ -17,7 +17,10 @@ const HomeCards: React.FC = () => {
     error,
   } = useQuery({
     queryKey: ["daos"],
-    queryFn: () => daoApi.getAllDAOs(),
+    queryFn: () =>
+      daoApi
+        .getAllDAOs()
+        .then((daos) => daos.filter((dao) => dao.treasuryAddress)),
   });
 
   const currentDate = new Date();

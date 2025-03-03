@@ -19,8 +19,8 @@ import { CSVRow } from "@/validation/csv.validation";
 import { toast } from "@/hooks/use-toast";
 import { Modal, ModalBody, ModalContent } from "@/components/ui/animated-modal";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import DAOAPI from "@/request/dao/dao.api";
 
 export const inviteSchema = z.object({
   inviteCode: z.string().min(6, "Invite code must be at least 6 characters"),
@@ -42,7 +42,8 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
   const { account, connected } = useWallet();
   const { status } = useSession();
   const inviteApi = new InviteAPI();
-  const { createDao, updateDaoValue } = useDao();
+  const { updateDaoValue } = useDao();
+  const daoAPI = new DAOAPI();
   const contract = useContract();
 
   const [scope, animate] = useAnimate();
@@ -65,67 +66,78 @@ const DaoInitForm: React.FC<Props> = ({ inviteCode, children }) => {
   });
 
   const handleCreateDao = async (data: IData) => {
-    const create_resp = await createDao(data, invite);
-    if (create_resp === null) {
+    try {
+      const create_resp = await daoAPI.createDAO({ inviteCode: invite, ...data });
+      if (create_resp === null) {
+        toast({
+          title: "Failed to create DAO",
+          description: "No response found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // @ts-ignore
+      const contract_resp = await contract.createDao(create_resp);
+
+      if (!contract_resp) {
+        toast({
+          title: "Failed to create DAO",
+          description: "Transaction failed",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const daoCreationEvent = contract_resp.events.find((event) =>
+        event.type.includes("DaoCreationEvent")
+      );
+
+      if (!daoCreationEvent) {
+        toast({
+          title: "Failed to create DAO",
+          description: "Creation event not found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { dao_coin, dao_object_address } = daoCreationEvent.data;
+
+      if (!dao_coin || !dao_object_address) {
+        toast({
+          title: "Failed to create DAO",
+          description: "Missing DAO addresses in event",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // @ts-ignore
+      const dao = await updateDaoValue(create_resp.id, {
+        treasuryAddress: dao_coin.inner,
+        daoCoinAddress: dao_object_address,
+      });
+
+      if (!dao) {
+        toast({
+          title: "Failed to create DAO",
+          description: "Something Went Wrong",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setDao(dao);
+      setIsOpen(true);
+    } catch (error) {
+      console.log(error);
       toast({
-        title: "Failed to create DAO, ",
-        description: "No response found",
+        title: "Error",
+        description: "An unexpected error occurred while creating the DAO",
         variant: "destructive",
       });
-      return;
     }
-
-    // @ts-ignore
-    const contract_resp = await contract.createDao(create_resp);
-
-    if (!contract_resp) {
-      toast({
-        title: "Failed to create DAO",
-        description: "Transaction failed",
-        variant: "destructive",
-      });
-      return;
-    }
-    const daoCreationEvent = contract_resp.events.find((event) =>
-      event.type.includes("DaoCreationEvent")
-    );
-
-    if (!daoCreationEvent) {
-      toast({
-        title: "Failed to create DAO",
-        description: "Creation event not found",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const { dao_coin, dao_object_address } = daoCreationEvent.data;
-
-    if (!dao_coin || !dao_object_address) {
-      toast({
-        title: "Failed to create DAO",
-        description: "Missing DAO addresses in event",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const dao = await updateDaoValue(create_resp.id, {
-      treasuryAddress: dao_coin.inner,
-      daoCoinAddress: dao_object_address,
-    });
-
-    if (!dao) {
-      toast({
-        title: "Failed to create DAO",
-        description: "Something Went Wrong",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setDao(dao);
-    setIsOpen(true);
   };
 
   return (

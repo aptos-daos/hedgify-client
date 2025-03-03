@@ -8,11 +8,12 @@ import { useQuery } from "@tanstack/react-query";
 import useAuthStore from "@/store/auth";
 import DashboardAdmin from "@/components/modules/admin/dashboard-admin";
 import { Skeleton } from "@/components/ui/skeleton";
+import DAOAPI from "@/request/dao/dao.api";
 
 const Dashboard = () => {
   const { isAdmin } = useAuthStore();
   const { account } = useWallet();
-  const { fetchAllDaoData } = useDao();
+  const daoApi = new DAOAPI();
 
   const {
     data: daos,
@@ -20,7 +21,7 @@ const Dashboard = () => {
     error,
   } = useQuery({
     queryKey: ["daos", account?.address],
-    queryFn: () => fetchAllDaoData(),
+    queryFn: () => daoApi.getAllDAOs(account?.address),
     enabled: !!account?.address,
   });
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
+import SecureProvider from "@/provider/SecureProvider";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -11,7 +12,7 @@ const DashboardLayoutProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  return <>{children}</>;
+  return <SecureProvider>{children}</SecureProvider>;
 };
 
 export default DashboardLayoutProvider;

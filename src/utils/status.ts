@@ -10,6 +10,8 @@ interface Dao extends DaoData {
 
 export const getLiveStatus = (dao: Dao): DaoStatus => {
   const now = new Date();
+
+  console.log(dao);
   
   if (isAfter(dao.fundingStarts, now)) {
     console.log('DAO status: Not Started');

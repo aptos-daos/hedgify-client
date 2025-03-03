@@ -48,7 +48,7 @@ export default async function Page({
           {TRADING_SWAP_ARR.includes(dao_status) && (
             <>
               <TradingLiveSwapWidget {...dao} />
-              <Screener pairAddress={dao.daoCoinAddress}/>
+              <Screener pairAddress={dao.daoCoinAddress} />
             </>
           )}
         </Separate.Layout>

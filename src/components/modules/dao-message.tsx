@@ -12,7 +12,7 @@ interface Props extends DaoData {
   tradingEnds: Date;
 }
 
-const DaoMessage = ({ status, tradingStarts, tradingEnds }: Props) => {
+const DaoMessage = ({ status, tradingStarts, tradingEnds, fundingStarts }: Props) => {
   const [timestr, setTimestr] = useState("");
   const messages = {
     [DaoStatus.NOT_STARTED]: DAO_TOP_MESSAGE.NOT_STARTED,
@@ -25,7 +25,7 @@ const DaoMessage = ({ status, tradingStarts, tradingEnds }: Props) => {
   useEffect(() => {
     const getTime = () => {
       if(status === DaoStatus.NOT_STARTED) {
-        return getStartsInFormat(tradingStarts);
+        return getStartsInFormat(fundingStarts);
       } else if(status === DaoStatus.TRADING_NOT_STARTED) {
         return getStartsInFormat(tradingStarts);
       } else if(status === DaoStatus.NOT_SUCCESSFUL) {

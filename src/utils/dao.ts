@@ -5,7 +5,7 @@ import { addDays } from "date-fns";
 import DAOAPI from "@/request/dao/dao.api";
 import { VIEW } from "@/constants/contract";
 import aptos from "@/lib/aptos";
-import { secondsToDate } from "./formatters";
+import { getSecondsTime, secondsToDate } from "./formatters";
 
 export const getDaoDetails = async (daoId: string) => {
   const api = new DAOAPI();
@@ -39,12 +39,8 @@ export const getDaoDetails = async (daoId: string) => {
 
   // TODO: Implement validation
 
-  const tradingStarts = dao_contract.trading_start_time
-    ? new Date(dao_contract.trading_start_time)
-    : new Date(dao.createdAt);
-  const tradingEnds = dao_contract.trading_start_time
-    ? new Date(dao_contract.trading_end_time)
-    : new Date(addDays(dao.createdAt, dao.tradingPeriod));
+  const tradingStarts = secondsToDate(dao_contract.trading_start_time);
+  const tradingEnds = secondsToDate(dao_contract.trading_end_time);
 
   const dao_status = getLiveStatus({
     ...dao,

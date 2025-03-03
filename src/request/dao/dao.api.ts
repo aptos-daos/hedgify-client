@@ -8,7 +8,9 @@ type DaoCreateType = DaoFormData & { inviteCode: string } & {
 };
 type DaoResponseType = DaoFormData & { merkle: string };
 type MerkleResponseType = { root: string; leaves: string[] };
-export type DaoSingleResponseType = DaoData & { merkle?: {root: string, proof: string, limit: string} };
+export type DaoSingleResponseType = DaoData & {
+  merkle?: { root: string; proof: string; limit: string };
+};
 
 /**
  * DAOAPI class provides methods to:
@@ -98,10 +100,11 @@ export default class DAOAPI extends APIRequest {
    * @returns Array of DAO objects
    * @throws If server returns an invalid response
    */
-  async getAllDAOs(): Promise<DaoData[]> {
+  async getAllDAOs(walletAddress?: string): Promise<DaoData[]> {
     const config = {
       url: "/dao",
       method: "GET",
+      body: { walletAddress },
     };
 
     try {
@@ -119,7 +122,10 @@ export default class DAOAPI extends APIRequest {
    * @returns DAO object
    * @throws If ID is missing or if server returns an invalid response
    */
-  async getSingleDAO(id: string, address?: string): Promise<DaoSingleResponseType | DaoData> {
+  async getSingleDAO(
+    id: string,
+    address?: string
+  ): Promise<DaoSingleResponseType | DaoData> {
     if (!id) {
       throw new Error("DAO ID is required");
     }
@@ -131,7 +137,10 @@ export default class DAOAPI extends APIRequest {
     };
 
     try {
-      const response = await this.request<DaoSingleResponseType | DaoData>(config, false);
+      const response = await this.request<DaoSingleResponseType | DaoData>(
+        config,
+        false
+      );
       return response;
     } catch (error) {
       console.error("Failed to fetch DAO:", error);

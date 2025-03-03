@@ -83,7 +83,7 @@ export const TYPE_FUN_ARGUMENTS = {
   ],
   JOIN_VIP: (dao: IData, amount: number) => [
     dao.treasuryAddress,
-    amount,
+    amount * 10e8,
     dao.merkle?.proof || [],
     dao.merkle?.limit || 0,
   ],
@@ -92,7 +92,7 @@ export const TYPE_FUN_ARGUMENTS = {
     amount: number,
     sign: string,
     sign_exp_time: string
-  ) => [dao.treasuryAddress, amount, sign, sign_exp_time],
+  ) => [dao.treasuryAddress, amount * 10e8, sign, sign_exp_time],
   START_TRADING: (dao: IData) => [dao.treasuryAddress],
   END_WHITELIST: (dao: IData) => [dao.treasuryAddress],
 };
